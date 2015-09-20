@@ -25,6 +25,9 @@ public class MainWindow {
 	 */
 	public static void main(String[] args) {
 		try {
+			/**
+			 * Setzt das LAF, finde Nimbus ganz nett
+			 */
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -65,6 +68,10 @@ public class MainWindow {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
+		/**
+		 * Eintraege der Tabelle, initialisierung mit null-values damit Scrollbalken angezeigt wird
+		 */
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"Envyus", "45,67%", "54,33%", "TSM", "Dickbutt Cup", "21.09.2015"},
@@ -168,6 +175,10 @@ public class MainWindow {
 				{null, null, null, null, null, null},
 				{null, null, null, null, null, null},
 			},
+			
+			/**
+			 * Kopfzeile / Spaltenbezeichnung des Tables
+			 */
 			new String[] {
 				"Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Event", "Zeit"
 			}
@@ -184,6 +195,9 @@ public class MainWindow {
 		table.getColumnModel().getColumn(4).setPreferredWidth(105);
 		table.getColumnModel().getColumn(5).setPreferredWidth(127);
 		
+		/**
+		 * Knopf, welcher alle aktuellen Matches updated
+		 */
 		JButton btnUpdateAll = new JButton("Update All");
 		btnUpdateAll.setBounds(34, 34, 107, 45);
 		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll);
@@ -193,6 +207,9 @@ public class MainWindow {
 		frmCsgoBettingCalculator.getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		/**
+		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
+		 */
 		JButton btnUpdateThis = new JButton("Update this");
 		btnUpdateThis.setBounds(325, 6, 91, 28);
 		panel.add(btnUpdateThis);
