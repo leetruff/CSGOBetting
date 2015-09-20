@@ -66,10 +66,7 @@ public class Launcher {
 		    	//get odds for team a, dummy variable wasSucc indicates if odds are availible for this match
 		    	int wasSucc = 0;
 		    	for(int j=1; j<matchArray2.length; j++){
-		    		System.out.println(""+matchArray2[j]+ "  " + matchArray2[j].length());
-		    		System.out.println(""+(matchArray[j].indexOf("match")+8));
-		    		System.out.println(""+(matchArray[j].indexOf("\"", matchArray[j].indexOf("match")+8)));
-		    		if(Integer.parseInt(matchArray2[j].substring(matchArray[j].indexOf("match")+8, matchArray[j].indexOf("\"", matchArray[j].indexOf("match")+8))) == matchId){
+		    		if(Integer.parseInt(matchArray2[j].substring(matchArray2[j].indexOf("match")+8, matchArray2[j].indexOf("\"", matchArray2[j].indexOf("match")+8))) == matchId){
 		    			temp = matchArray2[j].substring(matchArray2[j].indexOf("a\":\"")+4, matchArray2[j].indexOf(",\"b")-1);
 		    			matchLine+=temp+";";
 		    			wasSucc = 1;
@@ -85,8 +82,8 @@ public class Launcher {
 		    	//get odds for team b, dummy variable wasSucc indicates if odds are availible for this match
 		    	wasSucc = 0;
 		    	for(int j=1; j<matchArray2.length; j++){
-		    		if(Integer.parseInt(matchArray2[j].substring(matchArray[j].indexOf("match")+8, matchArray[j].indexOf("\",\"a"))) == matchId){
-		    			temp = matchArray2[j].substring(matchArray2[j].indexOf("b\":\"")+4, matchArray2[j].indexOf("\"\\},"));
+		    		if(Integer.parseInt(matchArray2[j].substring(matchArray2[j].indexOf("match")+8, matchArray2[j].indexOf("\"", matchArray2[j].indexOf("match")+8))) == matchId){
+		    			temp = matchArray2[j].substring(matchArray2[j].indexOf("b\":\"")+4, matchArray2[j].indexOf("\"", matchArray2[j].indexOf("b\":\"")+4));
 		    			matchLine+=temp+";";
 		    			wasSucc = 1;
 		    		}
@@ -108,7 +105,6 @@ public class Launcher {
 		    	matchLine += temp + ";";
 		    	temp = matchArray[i].substring(matchArray[i].indexOf("format")+9, matchArray[i].indexOf("format")+10);
 		    	matchLine += temp;
-		    	System.out.println(matchLine);
 		    	out.println(matchLine);
 		    }
 	    	System.out.println("fertig");
