@@ -117,9 +117,8 @@ public class ListenController {
 		for(int i = 0; i < matches.size(); i++){
 			Match match = matches.get(i);
 			
-			if(match.containsBegriffe(begriffe)){
+			if(match.containsBegriffe(begriffe))
 				temp.add(matches.get(i));
-			}
 		}
 		
 		aktuelleList = temp;

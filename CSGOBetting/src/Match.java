@@ -92,7 +92,17 @@ public class Match {
 	 * @return True oder False (vorhanden oder nicht vorhanden)
 	 */
 	public boolean containsBegriffe(String[] begriffe) {
-		// TODO Auto-generated method stub
+
+		for(int i = 0; i < begriffe.length; i++){
+			
+			if(team1Name.equals(begriffe[i]))
+				return true;
+			if(team2Name.equals(begriffe[i]))
+				return true;
+			if(eventName.equals(begriffe[i]))
+				return true;
+		}
+		
 		return false;
 	}
 	
