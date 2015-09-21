@@ -35,18 +35,18 @@ public class Team2TableCellRenderer extends DefaultTableCellRenderer {
             JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
            
             if ((int)table.getModel().getValueAt(row, 0) == -1){
-                label.setBackground(Color.GRAY);
+                label.setBackground(new Color(0xd9d9d9)); //hellgrau
             } else {
             if ((int)table.getModel().getValueAt(row, 0) == 0){
-                label.setBackground(Color.CYAN);
+                label.setBackground(new Color(0xa3ebff)); //hellcyan
             } else {
             if ((int)table.getModel().getValueAt(row, 0) == 1){
-                label.setBackground(Color.RED);
+                label.setBackground(new Color(0xff9494)); //hellrot
             } else {
             if ((int)table.getModel().getValueAt(row, 0) == 2){
-            	label.setBackground(Color.GREEN);
+            	label.setBackground(new Color(0x94ffa6)); //hellgruen
             } else {
-                label.setBackground(Color.GRAY);
+                label.setBackground(new Color(0xd9d9d9)); //hellgrau
             }}}}   
            
             return label;
