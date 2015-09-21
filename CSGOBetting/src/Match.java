@@ -105,5 +105,17 @@ public class Match {
 		
 		return false;
 	}
+
+
+
+	public void setWinner(int winner) {
+		this.winner = winner;
+	}
+
+
+
+	public int getWinner() {
+		return winner;
+	}
 	
 }

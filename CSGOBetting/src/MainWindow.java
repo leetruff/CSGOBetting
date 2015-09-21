@@ -90,11 +90,11 @@ public class MainWindow {
 		table.setModel(new DefaultTableModel(
 			new Object[][] {},
 			new String[] {
-				"Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Matchtype", "Event", "Zeit"
+				"Winner", "Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Matchtype", "Event", "Zeit"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, true, false, false
+				false, false, false, false, false, true, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -104,6 +104,15 @@ public class MainWindow {
 		table.getColumnModel().getColumn(1).setPreferredWidth(127);
 		table.getColumnModel().getColumn(5).setPreferredWidth(105);
 		table.getColumnModel().getColumn(6).setPreferredWidth(127);
+		
+		table.getColumnModel().getColumn(1).setCellRenderer(new Team1TableCellRenderer());
+		table.getColumnModel().getColumn(2).setCellRenderer(new Team1TableCellRenderer());
+		
+		table.getColumnModel().getColumn(3).setCellRenderer(new Team2TableCellRenderer());
+		table.getColumnModel().getColumn(4).setCellRenderer(new Team2TableCellRenderer());
+		
+		table.getColumnModel().removeColumn(table.getColumn("Winner"));
+
 		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
@@ -122,7 +131,7 @@ public class MainWindow {
 				team2Odds = Math.round(team2Odds * 100) / 100.0;
 
 				
-				model.addRow(new Object[]{matchList.get(i).getTeam1Name(), team1Odds+"%",
+				model.addRow(new Object[]{matchList.get(i).getWinner(), matchList.get(i).getTeam1Name(), team1Odds+"%",
 					team2Odds+"%", matchList.get(i).getTeam2Name(),"BO" + matchList.get(i).getMatchType(), matchList.get(i).getEventName(), matchList.get(i).getDatum().toGMTString()});
 				}
 		}
