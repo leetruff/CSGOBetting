@@ -118,7 +118,7 @@ public class MainWindow {
 		
 		ArrayList<Match> matchList = listCtrl.getMatches();
 		
-		for(int i = 0; i < matchList.size(); i++){
+		for(int i = matchList.size()-1; i >= 0; i--){
 			
 			if(!(Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0)){
 				double team1 = Double.parseDouble(matchList.get(i).getTeam1LoungeOdds());
