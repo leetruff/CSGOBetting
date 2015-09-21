@@ -101,9 +101,9 @@ public class MainWindow {
 			}
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(115);
-		table.getColumnModel().getColumn(1).setPreferredWidth(127);
-		table.getColumnModel().getColumn(5).setPreferredWidth(105);
-		table.getColumnModel().getColumn(6).setPreferredWidth(127);
+		table.getColumnModel().getColumn(1).setPreferredWidth(75);
+		table.getColumnModel().getColumn(5).setPreferredWidth(25);
+		table.getColumnModel().getColumn(6).setPreferredWidth(100);
 		
 		table.getColumnModel().getColumn(1).setCellRenderer(new Team1TableCellRenderer());
 		table.getColumnModel().getColumn(2).setCellRenderer(new Team1TableCellRenderer());
