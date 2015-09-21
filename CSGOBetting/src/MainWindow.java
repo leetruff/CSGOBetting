@@ -1,14 +1,17 @@
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.File;
 
-import javax.swing.JFrame;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.JScrollPane;
 import javax.swing.JButton;
-import javax.swing.JSeparator;
-import javax.swing.JMenuBar;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * 
@@ -19,6 +22,7 @@ public class MainWindow {
 
 	private JFrame frmCsgoBettingCalculator;
 	private JTable table;
+
 
 	/**
 	 * Launch the application.
@@ -74,117 +78,113 @@ public class MainWindow {
 		 */
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Envyus", "45,67%", "54,33%", "TSM", "Dickbutt Cup", "21.09.2015"},
-				{"Cloud9", "99%", "1%", "CLG", "CEVO", "21.09.2015"},
-				{"Lars", "100%", "0%", "Olli", "Skillcup Arena Tournament", "21.09.2015"},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
+				{"Envyus", "45,67%", "54,33%", "TSM", null, "Dickbutt Cup", "21.09.2015"},
+				{"Cloud9", "99%", "1%", "CLG", null, "CEVO", "21.09.2015"},
+				{"Lars", "100%", "0%", "Olli", null, "Skillcup Arena Tournament", "21.09.2015"},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
 			},
-			
-			/**
-			 * Kopfzeile / Spaltenbezeichnung des Tables
-			 */
 			new String[] {
-				"Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Event", "Zeit"
+				"Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Matchtype", "Event", "Zeit"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false
+				false, false, false, false, true, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -192,8 +192,8 @@ public class MainWindow {
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(115);
 		table.getColumnModel().getColumn(1).setPreferredWidth(127);
-		table.getColumnModel().getColumn(4).setPreferredWidth(105);
-		table.getColumnModel().getColumn(5).setPreferredWidth(127);
+		table.getColumnModel().getColumn(5).setPreferredWidth(105);
+		table.getColumnModel().getColumn(6).setPreferredWidth(127);
 		
 		/**
 		 * Knopf, welcher alle aktuellen Matches updated
@@ -203,6 +203,7 @@ public class MainWindow {
 		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll);
 		
 		JPanel panel = new JPanel();
+		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBounds(1256, 109, 422, 792);
 		frmCsgoBettingCalculator.getContentPane().add(panel);
 		panel.setLayout(null);
@@ -213,5 +214,50 @@ public class MainWindow {
 		JButton btnUpdateThis = new JButton("Update this");
 		btnUpdateThis.setBounds(325, 6, 91, 28);
 		panel.add(btnUpdateThis);
+		
+		JLabel lblTeam = new JLabel("Team 1");
+		lblTeam.setBounds(40, 43, 55, 16);
+		panel.add(lblTeam);
+		
+		JLabel lblVs = new JLabel("vs.");
+		lblVs.setBounds(160, 43, 55, 16);
+		panel.add(lblVs);
+		
+		JLabel lblTeam_1 = new JLabel("Team 2");
+		lblTeam_1.setBounds(287, 43, 55, 16);
+		panel.add(lblTeam_1);
+		
+		JLabel lblCsgl = new JLabel("CSGL:");
+		lblCsgl.setBounds(40, 101, 55, 16);
+		panel.add(lblCsgl);
+		
+		JLabel lblCsgl_1 = new JLabel("CSGL:");
+		lblCsgl_1.setBounds(287, 101, 55, 16);
+		panel.add(lblCsgl_1);
+		
+		JLabel lblEgb = new JLabel("EGB:");
+		lblEgb.setBounds(40, 129, 55, 16);
+		panel.add(lblEgb);
+		
+		JLabel lblEgb_1 = new JLabel("EGB:");
+		lblEgb_1.setBounds(287, 129, 55, 16);
+		panel.add(lblEgb_1);
+		
+		JLabel lblRecommendedBet = new JLabel("Recommended bet:\r\n");
+		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
+		lblRecommendedBet.setBounds(40, 331, 243, 28);
+		panel.add(lblRecommendedBet);
+		
+		JLabel lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
+		lblTimeLeftTill.setBounds(40, 236, 175, 16);
+		panel.add(lblTimeLeftTill);
+	}
+	
+	private String[] getMarkedMatchup(){
+		
+		
+		
+		
+		return null;
 	}
 }
