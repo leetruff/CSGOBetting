@@ -189,8 +189,6 @@ public class MainWindow {
 	private String[] getMarkedMatchup(){
 		
 		
-		
-		
 		return null;
 	}
 }
