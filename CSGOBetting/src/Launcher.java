@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -24,7 +25,6 @@ public class Launcher {
 		}
 		//System.out.println(matchString);
 		String[] matchArray = matchString.split("\\{");
-		System.out.println(""+matchArray.length);
 		try {
 			url = new URL("http://csgolounge.com/api/matches_stats");
 			s = new Scanner(url.openStream());
@@ -37,7 +37,6 @@ public class Launcher {
 		}
 		//System.out.println(matchString);
 		String[] matchArray2 = matchString.split("\\{");
-		System.out.println(""+matchArray2.length+" "+matchArray2[matchArray2.length-1]);
 		String path = "C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt";
 		//(use relative path for Unix systems)
 		File f = new File(path);
@@ -53,9 +52,37 @@ public class Launcher {
 			e.printStackTrace();
 		}
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
-			if(!fileExists)
-				out.println("ID\tY\tM\tD\tH\tM\tTeam1\tTeam2\tWinner\tClosed\tEvent\tFormat");
-			for(int i=1; i<matchArray.length; i++){
+			int updateStartingId = 1;
+			if(!fileExists){
+				out.println("ID\tY\tM\tD\tH\tM\tTeam1\tT1Odds\tTeam2\tT2Odds\tWinner\tClosed\tEvent\tFormat");
+			}else{
+			//check for new matches
+			RandomAccessFile newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
+			long length = f.length() - 1;
+			byte b;
+			do {                     
+			  length -= 1;
+			  newFile.seek(length);
+			  b = newFile.readByte();
+			} while(b != 10 && length > 0);
+			byte[] byteTemp = new byte[(int) (newFile.length()-length-3)];
+			newFile.readFully(byteTemp);
+			newFile.close();
+			updateStartingId = Integer.parseInt(new String(byteTemp, "UTF-8"));
+			
+			//delete last line
+			newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
+			length = f.length() - 1;
+			do {                     
+			  length -= 1;
+			  newFile.seek(length);
+			  b = newFile.readByte();
+			} while(b != 10 && length > 0);
+			newFile.setLength(length+1);
+			newFile.close();
+			}
+			
+			for(int i=updateStartingId; i<matchArray.length; i++){
 		    	String matchLine = matchArray[i].substring(matchArray[i].indexOf("\"match\"")+9, matchArray[i].indexOf("\",\"when")) + ";";
 		    	int matchId = Integer.parseInt(matchLine.substring(0, matchLine.length()-1));
 		    	String temp = matchArray[i].substring(matchArray[i].indexOf("when")+7, matchArray[i].indexOf("\",\"a"));
@@ -107,6 +134,7 @@ public class Launcher {
 		    	matchLine += temp;
 		    	out.println(matchLine);
 		    }
+			out.println(matchArray.length);
 	    	System.out.println("fertig");
 			out.close();
 		}catch (IOException e) {
