@@ -67,7 +67,7 @@ public class Launcher {
 			
 			//falls das File erst angelegt wurde, Kopfzeile einfügen, ansonsten checken ab wann aktualisiert werden muss
 			if(!fileExists){
-				out.println("ID\tY\tM\tD\tH\tM\tTeam1\tT1Odds\tTeam2\tT2Odds\tWinner\tClosed\tEvent\tFormat");
+				out.println("ID\tY\tM\tD\tH\tM\tTeam1\tT1Odds\tTeam2\tT2Odds\tWinner\tClosed\tEvent\tFormat;");
 				for(int i=1; i<matchArray.length; i++){
 					//suche erstes nicht geschlossenes match, ab da soll aktualisiert werden
 					if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
