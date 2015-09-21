@@ -84,5 +84,16 @@ public class Match {
 	public String getTeam2EGBOdds() {
 		return team2EGBOdds;
 	}
+
+
+	/**
+	 * Hilfsmethode, sucht nach Stichworten in einigen Eigenschaften des {@link Match Matches}
+	 * @param begriffe Die zu suchenden Stichworte
+	 * @return True oder False (vorhanden oder nicht vorhanden)
+	 */
+	public boolean containsBegriffe(String[] begriffe) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

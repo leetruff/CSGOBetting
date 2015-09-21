@@ -9,6 +9,8 @@ import java.util.StringTokenizer;
 
 
 
+
+
 /**
  * 
  * Der {@link ListenController} verwaltet die aktuelle (-> idealerweise die aktuell angezeigte) {@link java.util.ArrayList Liste} von {@link Match Matches}
@@ -21,7 +23,8 @@ public class ListenController {
 	String filepath = "C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt";
 	BufferedReader reader = null;
 	StringTokenizer tokenizer;
-	ArrayList<Match> list;
+	ArrayList<Match> matchList;
+	ArrayList<Match> aktuelleList;
 	
 	
 	
@@ -37,7 +40,8 @@ public class ListenController {
 		}
 		
 		//tokenizer = new StringTokenizer(str, ";");
-		list = new ArrayList<Match>();
+		matchList = new ArrayList<Match>();
+		aktuelleList = null;
 		readMatchDateFromFile();
 	}
 	
@@ -78,7 +82,7 @@ public class ListenController {
 				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat), Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
 				Match match = new Match(matchID, team1, team2, event, Integer.parseInt(matchType), date, team1Odds, team2Odds);
 				
-				list.add(match);
+				matchList.add(match);
 			} catch (Exception e) {
 				continue;
 			}
@@ -97,7 +101,28 @@ public class ListenController {
 //	
 	
 	public ArrayList<Match> getMatches(){
-		return list;
+		return matchList;
+	}
+	
+	/**
+	 * 	Setzt die aktuelle {@link java.util.ArrayList Liste} auf die {@link java.util.ArrayList Liste} der {@link Match Matches}, die zu den Stichworten passt
+	 * -> Fuehrt eine Suche nach {@link Match Matches} mit den gegebenen Begriffen durch
+	 * 
+	 * @param begriffe  Array mit den Begriffen, nach denen gesucht werden soll
+	 */
+	public void einfSuchListe(String... begriffe){
+		ArrayList<Match> temp = new ArrayList<Match>();
+		ArrayList<Match> matches = getMatches();
+		
+		for(int i = 0; i < matches.size(); i++){
+			Match match = matches.get(i);
+			
+			if(match.containsBegriffe(begriffe)){
+				temp.add(matches.get(i));
+			}
+		}
+		
+		aktuelleList = temp;
 	}
 	
 	
