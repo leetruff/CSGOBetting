@@ -62,7 +62,7 @@ public class MainWindow {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "deprecation" })
 	private void initialize() {
 		
 		try {
@@ -110,8 +110,21 @@ public class MainWindow {
 		ArrayList<Match> matchList = listCtrl.getMatches();
 		
 		for(int i = 0; i < matchList.size(); i++){
-			model.addRow(new Object[]{matchList.get(i).getTeam1Name(), matchList.get(i).getTeam1LoungeOdds(),
-					matchList.get(i).getTeam2LoungeOdds(), matchList.get(i).getTeam2Name(),"BO" + matchList.get(i).getMatchType(), matchList.get(i).getEventName(), matchList.get(i).getDatum().toString()});
+			
+			if(!(Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0)){
+				double team1 = Double.parseDouble(matchList.get(i).getTeam1LoungeOdds());
+				double team2 = Double.parseDouble(matchList.get(i).getTeam2LoungeOdds());
+				
+				double team1Odds = team1 / (team1 + team2) *100;
+				double team2Odds = team2 / (team1 + team2) *100;
+				
+				team1Odds = Math.round(team1Odds * 100) / 100.0;
+				team2Odds = Math.round(team2Odds * 100) / 100.0;
+
+				
+				model.addRow(new Object[]{matchList.get(i).getTeam1Name(), team1Odds+"%",
+					team2Odds+"%", matchList.get(i).getTeam2Name(),"BO" + matchList.get(i).getMatchType(), matchList.get(i).getEventName(), matchList.get(i).getDatum().toGMTString()});
+				}
 		}
 		
 		

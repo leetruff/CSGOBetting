@@ -78,6 +78,7 @@ public class ListenController {
 				String matchType = tokenizer.nextToken();
 				
 				//Scheiss auf deprecated, solange es das tut was es tun soll
+				jahr = "" + (Integer.parseInt(jahr) - 1900);
 				@SuppressWarnings("deprecation")
 				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat), Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
 				Match match = new Match(matchID, team1, team2, event, Integer.parseInt(matchType), date, team1Odds, team2Odds);
