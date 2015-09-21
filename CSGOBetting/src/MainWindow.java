@@ -2,6 +2,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,6 +22,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MainWindow {
 
+	private ListenController listCtrl;
+	
 	private JFrame frmCsgoBettingCalculator;
 	private JTable table;
 
@@ -60,6 +64,13 @@ public class MainWindow {
 	 */
 	@SuppressWarnings("serial")
 	private void initialize() {
+		
+		try {
+			listCtrl = new ListenController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		frmCsgoBettingCalculator = new JFrame();
 		frmCsgoBettingCalculator.setTitle("CSGO Betting Calculator V0.1");
 		frmCsgoBettingCalculator.setBounds(100, 100, 1700, 956);
@@ -77,108 +88,7 @@ public class MainWindow {
 		 * Eintraege der Tabelle, initialisierung mit null-values damit Scrollbalken angezeigt wird
 		 */
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Envyus", "45,67%", "54,33%", "TSM", null, "Dickbutt Cup", "21.09.2015"},
-				{"Cloud9", "99%", "1%", "CLG", null, "CEVO", "21.09.2015"},
-				{"Lars", "100%", "0%", "Olli", null, "Skillcup Arena Tournament", "21.09.2015"},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-			},
+			new Object[][] {},
 			new String[] {
 				"Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Matchtype", "Event", "Zeit"
 			}
@@ -194,6 +104,16 @@ public class MainWindow {
 		table.getColumnModel().getColumn(1).setPreferredWidth(127);
 		table.getColumnModel().getColumn(5).setPreferredWidth(105);
 		table.getColumnModel().getColumn(6).setPreferredWidth(127);
+		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
+		ArrayList<Match> matchList = listCtrl.getMatches();
+		
+		for(int i = 0; i < matchList.size(); i++){
+			model.addRow(new Object[]{matchList.get(i).getTeam1Name(), matchList.get(i).getTeam1LoungeOdds(),
+					matchList.get(i).getTeam2LoungeOdds(), matchList.get(i).getTeam2Name(),"BO" + matchList.get(i).getMatchType(), matchList.get(i).getEventName(), matchList.get(i).getDatum().toString()});
+		}
+		
 		
 		/**
 		 * Knopf, welcher alle aktuellen Matches updated
