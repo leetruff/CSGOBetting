@@ -95,11 +95,13 @@ public class Match {
 
 		for(int i = 0; i < begriffe.length; i++){
 			
-			if(team1Name.equals(begriffe[i]))
+			if(team1Name.equalsIgnoreCase(begriffe[i]))
 				return true;
-			if(team2Name.equals(begriffe[i]))
+			if(team2Name.equalsIgnoreCase(begriffe[i]))
 				return true;
-			if(eventName.equals(begriffe[i]))
+			if(eventName.toLowerCase().contains(begriffe[i]))
+				return true;
+			if(eventName.contains(begriffe[i]))
 				return true;
 		}
 		

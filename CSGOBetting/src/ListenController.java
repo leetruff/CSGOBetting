@@ -155,7 +155,7 @@ public class ListenController {
 	 * 
 	 * @param begriffe  Array mit den Begriffen, nach denen gesucht werden soll
 	 */
-	public void einfSuchListe(String... begriffe){
+	public ArrayList<Match> einfSuchListe(String... begriffe){
 		ArrayList<Match> temp = new ArrayList<Match>();
 		ArrayList<Match> matches = getMatches();
 		
@@ -167,6 +167,7 @@ public class ListenController {
 		}
 		
 		aktuelleList = temp;
+		return aktuelleList;
 	}
 	
 	

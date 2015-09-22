@@ -40,6 +40,8 @@ public class MainWindow {
 	private JTable table;
 	private JTextField txtSuche;
 	private ArrayList<Match> matchList;
+	private ArrayList<Match> suchList;
+	private ArrayList<Match> aktuelleList;
 
 	private JLabel lblTeam;
 
@@ -191,18 +193,18 @@ public class MainWindow {
 		 * Liste von <Matches> aus dem ListenController beziehen
 		 */
 		matchList = listCtrl.getMatches();
-		
+		aktuelleList = matchList;
 		
 		
 		/**
 		 * Tabelle mit den Eintraegen aus der Match Liste befuellen. Matches, welche Odds von 0 enthalten werden nicht
 		 * mit aufgenommen, da diese offensichtlich nicht relevant sind. 
 		 */
-		for(int i = matchList.size()-1; i >= 0; i--){
+		for(int i = aktuelleList.size()-1; i >= 0; i--){
 			
-			if(!(Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(matchList.get(i).getTeam1LoungeOdds()) == 0)){
-				double team1 = Double.parseDouble(matchList.get(i).getTeam1LoungeOdds());
-				double team2 = Double.parseDouble(matchList.get(i).getTeam2LoungeOdds());
+			if(!(Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0)){
+				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
+				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
 				
 				/**
 				 * Odds als prozentuale Werte berechnen
@@ -220,9 +222,9 @@ public class MainWindow {
 				/**
 				 * Tatsaechliches hinzufuegen der Matches in die Tabelle
 				 */
-				model.addRow(new Object[]{matchList.get(i).getWinner(), matchList.get(i).getTeam1Name(), team1Odds+"%",
-					team2Odds+"%", matchList.get(i).getTeam2Name(),"BO" + matchList.get(i).getMatchType(), matchList.get(i).getEventName(),
-					matchList.get(i).getDatum().toGMTString()});
+				model.addRow(new Object[]{aktuelleList.get(i).getWinner(), aktuelleList.get(i).getTeam1Name(), team1Odds+"%",
+					team2Odds+"%", aktuelleList.get(i).getTeam2Name(),"BO" + aktuelleList.get(i).getMatchType(), aktuelleList.get(i).getEventName(),
+					aktuelleList.get(i).getDatum().toGMTString()});
 				}
 		}
 		
@@ -310,9 +312,10 @@ public class MainWindow {
 		JButton btnNewButton = new JButton("go!");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO Suchfeld auslesen, und entsprechende Ergebnisliste in Tabelle
-				//anzeigen
+				createSuchList(txtSuche.getText());
+				//table.repaint();
 			}
+
 		});
 		
 		btnNewButton.setBounds(1170, 69, 53, 28);
@@ -356,6 +359,121 @@ public class MainWindow {
 	}
 	
 	/**
+	 * Erstellt die Suchliste
+	 * @param text Suchbegriffe
+	 */
+	protected void createSuchList(String text) {
+		
+		if(text.equals("") || text == null || text.equals("Suche...")){
+			aktuelleList = listCtrl.getMatches();
+		}
+		else{
+			ArrayList<Match> suchListe = listCtrl.einfSuchListe(text.split(" "));
+			aktuelleList = suchListe;
+		}
+		
+		updateTable();
+	}
+
+	@SuppressWarnings("serial")
+	private void updateTable() {
+		table.setModel(new DefaultTableModel(
+				new Object[][] {},
+				new String[] {
+					"Winner", "Team 1", "Team 1 Odds", "Team 2 Odds", "Team 2", "Matchtype", "Event", "Zeit"
+				}
+			) {
+				boolean[] columnEditables = new boolean[] {
+					false, false, false, false, false, true, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+		
+//            table.getColumnModel().getColumn(0).setPreferredWidth(50);
+//            table.getColumnModel().getColumn(1).setPreferredWidth(296);
+//            table.getColumnModel().getColumn(2).setPreferredWidth(134);
+//            table.getColumnModel().getColumn(3).setPreferredWidth(93);
+//            table.getColumnModel().getColumn(4).setPreferredWidth(95);
+            
+            
+            
+    		/**
+    		 * Setzen der Spaltenbreite (hehehe)
+    		 */
+    		table.getColumnModel().getColumn(0).setPreferredWidth(115);
+    		table.getColumnModel().getColumn(1).setPreferredWidth(75);
+    		table.getColumnModel().getColumn(5).setPreferredWidth(25);
+    		table.getColumnModel().getColumn(6).setPreferredWidth(100);
+    		
+    		
+    		/**
+    		 * TeamTableCellRenderer fuer Team 1 setzen
+    		 */
+    		table.getColumnModel().getColumn(1).setCellRenderer(new Team1TableCellRenderer());
+    		table.getColumnModel().getColumn(2).setCellRenderer(new Team1TableCellRenderer());
+    		
+    		/**
+    		 * TeamTableCellRenderer fuer Team 2 setzen
+    		 */
+    		table.getColumnModel().getColumn(3).setCellRenderer(new Team2TableCellRenderer());
+    		table.getColumnModel().getColumn(4).setCellRenderer(new Team2TableCellRenderer());
+    		
+    		/**
+    		 * Column mit Winnerindex [-1,0,1,2] ist noch im Table enthalten,
+    		 * wird jedoch hier ausgeblendet mit remove() 
+    		 */
+    		table.getColumnModel().removeColumn(table.getColumn("Winner"));
+    		
+    		/**
+    		 * Sortiert unsere Spalten
+    		 */
+    		//table.setAutTableModelSorter(true);
+    		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+    		sorter.setComparator(2, new DoubleComparator());
+    		sorter.setComparator(3, new DoubleComparator());
+    		table.setRowSorter(sorter);
+            
+            
+            
+        	
+        	DefaultTableModel model = (DefaultTableModel) table.getModel();
+        	
+    		/**
+    		 * Tabelle mit den Eintraegen aus der Match Liste befuellen. Matches, welche Odds von 0 enthalten werden nicht
+    		 * mit aufgenommen, da diese offensichtlich nicht relevant sind. 
+    		 */
+    		for(int i = aktuelleList.size()-1; i >= 0; i--){
+    			
+    			if(!(Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0)){
+    				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
+    				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
+    				
+    				/**
+    				 * Odds als prozentuale Werte berechnen
+    				 */
+    				double team1Odds = team1 / (team1 + team2) *100;
+    				double team2Odds = team2 / (team1 + team2) *100;
+    				
+    				/**
+    				 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
+    				 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
+    				 */
+    				team1Odds = Math.round(team1Odds * 100) / 100.0;
+    				team2Odds = Math.round(team2Odds * 100) / 100.0;
+
+    				/**
+    				 * Tatsaechliches hinzufuegen der Matches in die Tabelle
+    				 */
+    				model.addRow(new Object[]{aktuelleList.get(i).getWinner(), aktuelleList.get(i).getTeam1Name(), team1Odds+"%",
+    					team2Odds+"%", aktuelleList.get(i).getTeam2Name(),"BO" + aktuelleList.get(i).getMatchType(), aktuelleList.get(i).getEventName(),
+    					aktuelleList.get(i).getDatum().toGMTString()});
+    				}
+    		}
+	}
+
+	/**
 	 * Liest aus, welches Match gerade in der Tabelle markiert ist.
 	 * @return Das aktuelle Match Objekt
 	 */
@@ -363,7 +481,7 @@ public class MainWindow {
 
 		int index = table.getRowSorter().convertRowIndexToModel(table.getSelectedRow());
 		
-		return matchList.get(matchList.size()-1 - index);
+		return aktuelleList.get(aktuelleList.size()-1 - index);
 	}
 	
 	/**
