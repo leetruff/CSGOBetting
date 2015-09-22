@@ -100,6 +100,12 @@ public class MainWindow {
 		 * Table mit unseren Matches
 		 */
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				table.repaint();
+			}
+		});
 		scrollPane.setViewportView(table);
 		
 		/**
@@ -145,7 +151,11 @@ public class MainWindow {
 		 * wird jedoch hier ausgeblendet mit remove() 
 		 */
 		table.getColumnModel().removeColumn(table.getColumn("Winner"));
-
+		
+		/**
+		 * Sortiert unsere Spalten
+		 */
+		table.setAutoCreateRowSorter(true);
 		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
