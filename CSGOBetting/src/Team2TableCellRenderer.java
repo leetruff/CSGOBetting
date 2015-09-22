@@ -5,26 +5,14 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
  
- 
+ /**
+  * Gegenstueck zu {@link Team1TableCellRenderer Team1TableCellRenderer}
+  * @author Lars
+  *
+  */
 @SuppressWarnings("serial")
 public class Team2TableCellRenderer extends DefaultTableCellRenderer {
-    //----------------------------------------------
-    //###           Attributes                   ###
-    //----------------------------------------------
-           
-    //----------------------------------------------
-    //###           Constructors                 ###
-    //----------------------------------------------   
-           
-           
-           
-    //----------------------------------------------
-    //###           Methods                      ###
-    //----------------------------------------------
-   
-        //-----------------------------
-        //getTableCellRendererComponent
-        //-----------------------------
+
         @Override
         public Component getTableCellRendererComponent(
                 JTable table,
@@ -37,6 +25,13 @@ public class Team2TableCellRenderer extends DefaultTableCellRenderer {
            
             if(!isSelected){
             	
+            	
+            	/**
+            	 * -1 bisher nicht beendet
+            	 *  0 unentschieden
+            	 *  1 Team 1 siegt
+            	 *  2 Team 2 siegt
+            	 */
                 if ((int)table.getModel().getValueAt(row, 0) == -1){
                     label.setBackground(new Color(0xd9d9d9)); //hellgrau
                 } else {
@@ -55,6 +50,6 @@ public class Team2TableCellRenderer extends DefaultTableCellRenderer {
             }
            
             return label;
-            }//getTableCellRendererComponent
+            }
  
-}//ColoredTableCellRenderer
+}

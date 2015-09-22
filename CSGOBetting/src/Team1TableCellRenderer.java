@@ -5,26 +5,15 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
  
- 
+ /**
+  * Klasse um die Tabellenreihen entsprechend nach Winnerteam einzufaerben. Und ja, das geht leider
+  * nicht einfacher in Swing.
+  * @author Lars
+  *
+  */
 @SuppressWarnings("serial")
 public class Team1TableCellRenderer extends DefaultTableCellRenderer {
-    //----------------------------------------------
-    //###           Attributes                   ###
-    //----------------------------------------------
-           
-    //----------------------------------------------
-    //###           Constructors                 ###
-    //----------------------------------------------   
-           
-           
-           
-    //----------------------------------------------
-    //###           Methods                      ###
-    //----------------------------------------------
-   
-        //-----------------------------
-        //getTableCellRendererComponent
-        //-----------------------------
+
         @Override
         public Component getTableCellRendererComponent(
                 JTable table,
@@ -35,8 +24,18 @@ public class Team1TableCellRenderer extends DefaultTableCellRenderer {
                 int column) {
             JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
            
+            /**
+             * Wenns ausgewaehlt ist, soll es blau sein.
+             */
             if(!isSelected){
-            
+            	
+            	
+            	/**
+            	 * -1 bisher nicht beendet
+            	 *  0 unentschieden
+            	 *  1 Team 1 siegt
+            	 *  2 Team 2 siegt
+            	 */
 	            if ((int)table.getModel().getValueAt(row, 0) == -1){
 	                label.setBackground(new Color(0xd9d9d9)); //hellgrau
 	            } else {
@@ -54,6 +53,6 @@ public class Team1TableCellRenderer extends DefaultTableCellRenderer {
            
             }
             return label;
-            }//getTableCellRendererComponent
+            }
  
-}//ColoredTableCellRenderer
+}
