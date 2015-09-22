@@ -18,7 +18,11 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.JTextField;
+
+import Comparators.DoubleComparator;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -155,7 +159,11 @@ public class MainWindow {
 		/**
 		 * Sortiert unsere Spalten
 		 */
-		table.setAutoCreateRowSorter(true);
+		//table.setAutTableModelSorter(true);
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+		sorter.setComparator(2, new DoubleComparator());
+		sorter.setComparator(3, new DoubleComparator());
+		table.setRowSorter(sorter);
 		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
