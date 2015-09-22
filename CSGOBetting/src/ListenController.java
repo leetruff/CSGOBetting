@@ -53,14 +53,22 @@ public class ListenController {
 	private void readMatchDateFromFile() throws IOException{
 		
 		String line;
+		/**
+		 * Laeuft bis es die erste Zeile findet, welche kein Semikolon enthaelt (also exakt die letzte Zeile des Files)
+		 */
 		while(((line = reader.readLine()) != null) && line.contains(";")){
 			
 			try {
+				/**
+				 * Erste Zeile ueberspringen
+				 */
 				if(line.startsWith("ID")){
 					continue;
 				}
 				
-				
+				/**
+				 * String zerlegen und einzelne Werte auslesen
+				 */
 				tokenizer = new StringTokenizer(line, ";");
 				String matchID = tokenizer.nextToken();
 				String jahr = tokenizer.nextToken();
@@ -77,18 +85,38 @@ public class ListenController {
 				String event = tokenizer.nextToken();
 				String matchType = tokenizer.nextToken();
 				
-				//Scheiss auf deprecated, solange es das tut was es tun soll
+				/**
+				 * Jahr ist irgendwie immer mit 1900 initialisiert und wird komischerweise immer zur Eingabe hinzuaddiert.
+				 * Deshalb 1900 subtrahieren.
+				 */
 				jahr = "" + (Integer.parseInt(jahr) - 1900);
+				
+				/**
+				 * Date Objekt anlegen, ist zwar deprecated aber funktioniert noch super.
+				 */
 				@SuppressWarnings("deprecation")
 				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat), Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
+				
+				/**
+				 * Match Objekt mit entsprechenden Informationen anlegen.
+				 */
 				Match match = new Match(matchID, team1, team2, event, Integer.parseInt(matchType), date, team1Odds, team2Odds);
 				
 				match.setWinner(Integer.parseInt(winner));
 				
+				/**
+				 * Hinzufuegen des Matches in unsere Archivliste, falls es keine 0er Odds enthaelt.
+				 */
 				if(!(Integer.parseInt(team1Odds) == 0 || Integer.parseInt(team2Odds) == 0)){
 					matchList.add(match);
 				}
-			} catch (Exception e) {
+			} 
+			/**
+			 * Jegliche Exception die geworfen werden kann, deutet darauf hin, dass die entsprechende
+			 * Zeile des Files ein Match enthaelt, welches fehlerhafe Informationen enthaelt. Deshalb
+			 * koennen wir dies einfach ueberspringen und nicht in unser Matcharchiv mit aufnehmen. 
+			 */
+			catch (Exception e) {
 				continue;
 			}
 		}
@@ -105,8 +133,20 @@ public class ListenController {
 //	}
 //	
 	
+	/**
+	 * Getter fuer unsere {@link java.util.ArrayList Liste} von {@link Match Matches}
+	 * @return Matchliste mit allen aus dem File ausgelesenen, gueltigen Matches.
+	 */
 	public ArrayList<Match> getMatches(){
 		return matchList;
+	}
+	
+	/**
+	 * Getter fuer die aktuelle, durch die Suchfunktion gefilterte Liste.
+	 * @return Gefilterte Liste, welche Matches enthaelt, die auf die Suchanfrage anspringen.
+	 */
+	public ArrayList<Match> getAktuelleListe(){
+		return aktuelleList;
 	}
 	
 	/**
