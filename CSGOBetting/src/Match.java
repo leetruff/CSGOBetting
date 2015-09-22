@@ -108,6 +108,16 @@ public class Match {
 		return false;
 	}
 
+	public boolean containsTeams(String[] begriffe) {
+		
+		if(  (team1Name.equalsIgnoreCase(begriffe[0]) && team2Name.equalsIgnoreCase(begriffe[2])) || 
+				(team2Name.equalsIgnoreCase(begriffe[0]) && team1Name.equalsIgnoreCase(begriffe[2])) ){
+			
+			return true;
+		}
+		
+		return false;
+	}
 
 
 	public void setWinner(int winner) {
@@ -119,5 +129,8 @@ public class Match {
 	public int getWinner() {
 		return winner;
 	}
+
+
+
 	
 }

@@ -304,7 +304,7 @@ public class MainWindow {
 		frmCsgoBettingCalculator.getContentPane().add(txtSuche);
 		txtSuche.setColumns(10);
 		
-		txtSuche.setToolTipText("Eingabefeld für Stichworte");
+		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 </html>");
 		
 		/**
 		 * Startet die Suche
@@ -367,6 +367,12 @@ public class MainWindow {
 		if(text.equals("") || text == null || text.equals("Suche...")){
 			aktuelleList = listCtrl.getMatches();
 		}
+		
+		else if(text.contains("+")){
+			ArrayList<Match> suchListe = listCtrl.erwSuchListe(text.split(" "));
+			aktuelleList = suchListe;
+		}
+		
 		else{
 			ArrayList<Match> suchListe = listCtrl.einfSuchListe(text.split(" "));
 			aktuelleList = suchListe;
