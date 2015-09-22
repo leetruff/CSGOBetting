@@ -23,7 +23,7 @@ public class Team1TableCellRenderer extends DefaultTableCellRenderer {
                 int row,
                 int column) {
             JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-           
+            int modelRow = table.getRowSorter().convertRowIndexToModel(row);
             /**
              * Wenns ausgewaehlt ist, soll es blau sein.
              */
@@ -36,16 +36,16 @@ public class Team1TableCellRenderer extends DefaultTableCellRenderer {
             	 *  1 Team 1 siegt
             	 *  2 Team 2 siegt
             	 */
-	            if ((int)table.getModel().getValueAt(row, 0) == -1){
+	            if ((int)table.getModel().getValueAt(modelRow, 0) == -1){
 	                label.setBackground(new Color(0xd9d9d9)); //hellgrau
 	            } else {
-	            if ((int)table.getModel().getValueAt(row, 0) == 0){
+	            if ((int)table.getModel().getValueAt(modelRow, 0) == 0){
 	            	label.setBackground(new Color(0xa3ebff)); //hellcyan
 	            } else {
-	            if ((int)table.getModel().getValueAt(row, 0) == 1){
+	            if ((int)table.getModel().getValueAt(modelRow, 0) == 1){
 	                label.setBackground(new Color(0x94ffa6)); //hellgruen
 	            } else {
-	            if ((int)table.getModel().getValueAt(row, 0) == 2){
+	            if ((int)table.getModel().getValueAt(modelRow, 0) == 2){
 	            	label.setBackground(new Color(0xff9494)); //hellrot
 	            } else {
 	                label.setBackground(new Color(0xd9d9d9)); //hellgrau
