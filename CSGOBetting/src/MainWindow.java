@@ -39,6 +39,25 @@ public class MainWindow {
 	private JFrame frmCsgoBettingCalculator;
 	private JTable table;
 	private JTextField txtSuche;
+	private ArrayList<Match> matchList;
+
+	private JLabel lblTeam;
+
+	private JLabel lblVs;
+
+	private JLabel lblTeam_1;
+
+	private JLabel lblCsgl;
+
+	private JLabel lblCsgl_1;
+
+	private JLabel lblEgb;
+
+	private JLabel lblEgb_1;
+
+	private JLabel lblRecommendedBet;
+
+	private JLabel lblTimeLeftTill;
 
 
 	/**
@@ -108,6 +127,7 @@ public class MainWindow {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				table.repaint();
+				showMatchInformation();
 			}
 		});
 		scrollPane.setViewportView(table);
@@ -170,7 +190,7 @@ public class MainWindow {
 		/**
 		 * Liste von <Matches> aus dem ListenController beziehen
 		 */
-		ArrayList<Match> matchList = listCtrl.getMatches();
+		matchList = listCtrl.getMatches();
 		
 		
 		
@@ -236,68 +256,40 @@ public class MainWindow {
 		btnUpdateThis.setBounds(325, 6, 91, 28);
 		panel.add(btnUpdateThis);
 		
-		/**
-		 * Label im rechten Panel fuer Team 1 Name
-		 */
-		JLabel lblTeam = new JLabel("Team 1");
-		lblTeam.setBounds(40, 43, 55, 16);
+		lblTeam = new JLabel("Team 1");
+		lblTeam.setBounds(40, 43, 91, 16);
 		panel.add(lblTeam);
 		
-		/**
-		 * Rein optisches, nicht funktionales Label, wird nie veraendert
-		 */
-		JLabel lblVs = new JLabel("vs.");
+		lblVs = new JLabel("vs.");
 		lblVs.setBounds(160, 43, 55, 16);
 		panel.add(lblVs);
 		
-		/**
-		 * Label im rechten Panel fuer Team 2 Name
-		 */
-		JLabel lblTeam_1 = new JLabel("Team 2");
-		lblTeam_1.setBounds(287, 43, 55, 16);
+		lblTeam_1 = new JLabel("Team 2");
+		lblTeam_1.setBounds(287, 43, 91, 16);
 		panel.add(lblTeam_1);
 		
-		/**
-		 * CSGL Odds fuer Team 1
-		 */
-		JLabel lblCsgl = new JLabel("CSGL:");
-		lblCsgl.setBounds(40, 101, 55, 16);
+		lblCsgl = new JLabel("CSGL:");
+		lblCsgl.setBounds(40, 101, 103, 16);
 		panel.add(lblCsgl);
 		
-		/**
-		 * CSGL Odds fuer Team 2
-		 */
-		JLabel lblCsgl_1 = new JLabel("CSGL:");
-		lblCsgl_1.setBounds(287, 101, 55, 16);
+		lblCsgl_1 = new JLabel("CSGL:");
+		lblCsgl_1.setBounds(287, 101, 91, 16);
 		panel.add(lblCsgl_1);
 		
-		/**
-		 * EGB Odds fuer Team 1
-		 */
-		JLabel lblEgb = new JLabel("EGB:");
-		lblEgb.setBounds(40, 129, 55, 16);
+		lblEgb = new JLabel("EGB:");
+		lblEgb.setBounds(40, 129, 117, 16);
 		panel.add(lblEgb);
 		
-		/**
-		 * EGB Odds fuer Team 2
-		 */
-		JLabel lblEgb_1 = new JLabel("EGB:");
-		lblEgb_1.setBounds(287, 129, 55, 16);
+		lblEgb_1 = new JLabel("EGB:");
+		lblEgb_1.setBounds(287, 129, 91, 16);
 		panel.add(lblEgb_1);
 		
-		/**
-		 * RecommendetBet nach Kelly Formel, entweder hier den Labeltext setzen oder ein neues
-		 * Sublabel erstellen
-		 */
-		JLabel lblRecommendedBet = new JLabel("Recommended bet:\r\n");
+		lblRecommendedBet = new JLabel("Recommended bet:\r\n");
 		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblRecommendedBet.setBounds(40, 331, 243, 28);
 		panel.add(lblRecommendedBet);
 		
-		/**
-		 * Restliche Zeit bis Matchbeginn
-		 */
-		JLabel lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
+		lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
 		lblTimeLeftTill.setBounds(40, 236, 175, 16);
 		panel.add(lblTimeLeftTill);
 		
@@ -368,7 +360,39 @@ public class MainWindow {
 	 * @return Das aktuelle Match Objekt
 	 */
 	private Match getMarkedMatchup(){
-		//TODO
-		return null;
+
+		int index = table.getRowSorter().convertRowIndexToModel(table.getSelectedRow());
+		
+		return matchList.get(matchList.size()-1 - index);
+	}
+	
+	/**
+	 * Aktualisiert die Informationen in dem rechten Panel
+	 */
+	private void showMatchInformation(){
+		Match match = getMarkedMatchup();
+		
+		lblTeam.setText(match.getTeam1Name());
+		lblTeam_1.setText(match.getTeam2Name());
+		
+		double team1 = Double.parseDouble(match.getTeam1LoungeOdds());
+		double team2 = Double.parseDouble(match.getTeam2LoungeOdds());
+		
+		/**
+		 * Odds als prozentuale Werte berechnen
+		 */
+		double team1Odds = team1 / (team1 + team2) *100;
+		double team2Odds = team2 / (team1 + team2) *100;
+		
+		/**
+		 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
+		 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
+		 */
+		team1Odds = Math.round(team1Odds * 100) / 100.0;
+		team2Odds = Math.round(team2Odds * 100) / 100.0;
+		
+		lblCsgl.setText("CSGL: " + team1Odds + "%");
+		lblCsgl_1.setText("CSGL: " + team2Odds + "%");
+		
 	}
 }
