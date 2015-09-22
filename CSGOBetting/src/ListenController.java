@@ -95,7 +95,7 @@ public class ListenController {
 				 * Date Objekt anlegen, ist zwar deprecated aber funktioniert noch super.
 				 */
 				@SuppressWarnings("deprecation")
-				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat), Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
+				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
 				
 				/**
 				 * Match Objekt mit entsprechenden Informationen anlegen.
