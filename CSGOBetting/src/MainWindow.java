@@ -297,6 +297,15 @@ public class MainWindow {
 		lblTimeLeftTill.setBounds(40, 236, 175, 16);
 		panel.add(lblTimeLeftTill);
 		
+		JButton btnOpenInBrowser = new JButton("Open in Browser");
+		btnOpenInBrowser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getLoungeID());
+			}
+		});
+		btnOpenInBrowser.setBounds(263, 748, 153, 38);
+		panel.add(btnOpenInBrowser);
+		
 		/**
 		 * Suchfeld um Matcharchiv nach Stichworten zu durchsuchen
 		 */
@@ -537,4 +546,13 @@ public class MainWindow {
 		lblCsgl_1.setText("CSGL: " + team2Odds + "%");
 		
 	}
+	
+	public void openWebPage(String url){
+		   try {         
+		     java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+		   }
+		   catch (java.io.IOException e) {
+		       System.out.println(e.getMessage());
+		   }
+		}
 }

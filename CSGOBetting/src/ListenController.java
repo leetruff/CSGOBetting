@@ -171,7 +171,13 @@ public class ListenController {
 		return aktuelleList;
 	}
 
-
+	
+	/**
+	 * 	Setzt die aktuelle {@link java.util.ArrayList Liste} auf die {@link java.util.ArrayList Liste} der {@link Match Matches}, die zu den Stichworten passt
+	 * -> Fuehrt eine Suche nach {@link Match Matches} mit den gegebenen Begriffen durch, sucht hierbei nach einem Matchup zwischen 2 Teams
+	 * 
+	 * @param begriffe  Array mit den Begriffen, nach denen gesucht werden soll, Syntax: Team1 + Team2
+	 */
 	public ArrayList<Match> erwSuchListe(String... begriffe) {
 		
 		ArrayList<Match> temp = new ArrayList<Match>();
@@ -191,7 +197,12 @@ public class ListenController {
 		
 	}
 
-
+	/**
+	 * 	Setzt die aktuelle {@link java.util.ArrayList Liste} auf die {@link java.util.ArrayList Liste} der {@link Match Matches}, die zu den Stichworten passt
+	 * -> Fuehrt eine Suche nach {@link Match Matches} mit den gegebenen Begriffen durch, sucht hierbei nach einem Matchup zwischen 2 Teams auf einem Event
+	 * 
+	 * @param begriffe  Array mit den Begriffen, nach denen gesucht werden soll, Syntax: Team1 + Team2 + Event
+	 */
 	public ArrayList<Match> erwSuchListeEvent(String... begriffe) {
 
 		ArrayList<Match> temp = new ArrayList<Match>();
