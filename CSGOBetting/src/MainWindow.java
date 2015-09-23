@@ -22,6 +22,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JTextField;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import Comparators.DoubleComparator;
 
 import java.awt.event.FocusAdapter;
@@ -304,7 +306,8 @@ public class MainWindow {
 		frmCsgoBettingCalculator.getContentPane().add(txtSuche);
 		txtSuche.setColumns(10);
 		
-		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 </html>");
+		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 "
+				+ "<br> Match auf Event Syntax: Team1 + Team2 + Event </html>");
 		
 		/**
 		 * Startet die Suche
@@ -364,8 +367,22 @@ public class MainWindow {
 	 */
 	protected void createSuchList(String text) {
 		
+
+		int count = 0;
+		
+		for (int i = 0; i < text.length(); i++) {
+		    if (text.charAt(i) == '+') {
+		        count++;
+		    }
+		}
+		
 		if(text.equals("") || text == null || text.equals("Suche...")){
 			aktuelleList = listCtrl.getMatches();
+		}
+		
+		else if(count == 2){
+			ArrayList<Match> suchListe = listCtrl.erwSuchListeEvent(text.split(" "));
+			aktuelleList = suchListe;
 		}
 		
 		else if(text.contains("+")){

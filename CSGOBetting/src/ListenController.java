@@ -177,6 +177,7 @@ public class ListenController {
 		ArrayList<Match> temp = new ArrayList<Match>();
 		ArrayList<Match> matches = getMatches();
 		
+		
 		for(int i = 0; i < matches.size(); i++){
 			Match match = matches.get(i);
 			
@@ -188,6 +189,25 @@ public class ListenController {
 		
 		return aktuelleList;
 		
+	}
+
+
+	public ArrayList<Match> erwSuchListeEvent(String... begriffe) {
+
+		ArrayList<Match> temp = new ArrayList<Match>();
+		ArrayList<Match> matches = getMatches();
+		
+		
+		for(int i = 0; i < matches.size(); i++){
+			Match match = matches.get(i);
+			
+			if(match.containsTeamsEvent(begriffe))
+				temp.add(matches.get(i));
+		}
+		
+		aktuelleList = temp;
+		
+		return aktuelleList;
 	}
 	
 	

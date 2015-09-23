@@ -119,6 +119,17 @@ public class Match {
 		return false;
 	}
 
+	
+	public boolean containsTeamsEvent(String[] begriffe) {
+
+		if(  ((team1Name.equalsIgnoreCase(begriffe[0]) && team2Name.equalsIgnoreCase(begriffe[2])) || 
+				(team2Name.equalsIgnoreCase(begriffe[0]) && team1Name.equalsIgnoreCase(begriffe[2])) ) && 
+				(eventName.toLowerCase().contains(begriffe[4]) || eventName.contains(begriffe[4])) ){
+			return true;
+		}
+		
+		return false;
+	}
 
 	public void setWinner(int winner) {
 		this.winner = winner;
@@ -129,6 +140,8 @@ public class Match {
 	public int getWinner() {
 		return winner;
 	}
+
+
 
 
 
