@@ -374,6 +374,7 @@ public class MainWindow {
 		    if (text.charAt(i) == '+') {
 		        count++;
 		    }
+		    
 		}
 		
 		if(text.equals("") || text == null || text.equals("Suche...")){
