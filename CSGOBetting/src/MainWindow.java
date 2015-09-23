@@ -28,6 +28,7 @@ import Comparators.DoubleComparator;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * 
@@ -62,6 +63,8 @@ public class MainWindow {
 	private JLabel lblRecommendedBet;
 
 	private JLabel lblTimeLeftTill;
+
+	private JButton btnNewButton;
 
 
 	/**
@@ -114,14 +117,51 @@ public class MainWindow {
 		frmCsgoBettingCalculator.setTitle("CSGO Betting Calculator V0.1");
 		frmCsgoBettingCalculator.setBounds(100, 100, 1700, 956);
 		frmCsgoBettingCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmCsgoBettingCalculator.getContentPane().setLayout(null);
 		
 		/**
 		 * Scrollpane fuer unsere Tabelle
 		 */
+		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[107px][755.00px][151px][61.00px][127.00px][422px]", "[63px][824.00px]"));
+		txtSuche = new JTextField();
+		txtSuche.setText("Suche...");
+		frmCsgoBettingCalculator.getContentPane().add(txtSuche, "cell 2 0,growx,aligny bottom");
+		txtSuche.setColumns(10);
+		
+		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 "
+				+ "<br> Match auf Event Syntax: Team1 + Team2 + Event </html>");
+		txtSuche.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        if(txtSuche.getText().equals("Suche...")){
+		           txtSuche.setText(null);
+		        }
+		    }
+		});
+		txtSuche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnNewButton.doClick();
+			}
+		});
+		txtSuche.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(txtSuche.getText().equals("")){
+					txtSuche.setText("Suche...");
+				}
+			}
+		});
+		
+		btnNewButton = new JButton("go!");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createSuchList(txtSuche.getText());
+				//table.repaint();
+			}
+
+		});
+		frmCsgoBettingCalculator.getContentPane().add(btnNewButton, "cell 3 0,alignx center,aligny bottom");
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(34, 109, 1189, 792);
-		frmCsgoBettingCalculator.getContentPane().add(scrollPane);
+		frmCsgoBettingCalculator.getContentPane().add(scrollPane, "cell 0 1 5 1,grow");
 		
 		/**
 		 * Table mit unseren Matches
@@ -241,61 +281,45 @@ public class MainWindow {
 				//sondern uns Objekte davon erzeugen.
 			}
 		});
-		btnUpdateAll.setBounds(34, 34, 107, 45);
-		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll);
+		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll, "cell 0 0,growx,aligny center");
 		
 		/**
 		 * Panel am rechten Rand mit Matchinformationen
 		 */
 		JPanel panel = new JPanel();
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel.setBounds(1256, 109, 422, 792);
-		frmCsgoBettingCalculator.getContentPane().add(panel);
-		panel.setLayout(null);
+		frmCsgoBettingCalculator.getContentPane().add(panel, "cell 5 1,grow");
 		
 		/**
 		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
 		 */
+		panel.setLayout(new MigLayout("", "[117px][3px][55px][][48px][20px][4px][129px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][][][][][][][][][][][][][][][][][]"));
 		JButton btnUpdateThis = new JButton("Update this");
-		btnUpdateThis.setBounds(325, 6, 91, 28);
-		panel.add(btnUpdateThis);
+		panel.add(btnUpdateThis, "cell 7 0,alignx right,aligny top");
 		
 		lblTeam = new JLabel("Team 1");
-		lblTeam.setBounds(40, 43, 91, 16);
-		panel.add(lblTeam);
+		panel.add(lblTeam, "cell 0 1,growx,aligny top");
 		
 		lblVs = new JLabel("vs.");
-		lblVs.setBounds(160, 43, 55, 16);
-		panel.add(lblVs);
+		panel.add(lblVs, "cell 3 1,alignx center,aligny top");
 		
 		lblTeam_1 = new JLabel("Team 2");
-		lblTeam_1.setBounds(287, 43, 91, 16);
-		panel.add(lblTeam_1);
+		panel.add(lblTeam_1, "cell 7 1,growx,aligny top");
 		
 		lblCsgl = new JLabel("CSGL:");
-		lblCsgl.setBounds(40, 101, 103, 16);
-		panel.add(lblCsgl);
+		panel.add(lblCsgl, "cell 0 3,growx,aligny top");
 		
 		lblCsgl_1 = new JLabel("CSGL:");
-		lblCsgl_1.setBounds(287, 101, 91, 16);
-		panel.add(lblCsgl_1);
+		panel.add(lblCsgl_1, "cell 7 3,growx,aligny top");
 		
 		lblEgb = new JLabel("EGB:");
-		lblEgb.setBounds(40, 129, 117, 16);
-		panel.add(lblEgb);
+		panel.add(lblEgb, "cell 0 5,growx,aligny top");
 		
 		lblEgb_1 = new JLabel("EGB:");
-		lblEgb_1.setBounds(287, 129, 91, 16);
-		panel.add(lblEgb_1);
-		
-		lblRecommendedBet = new JLabel("Recommended bet:\r\n");
-		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
-		lblRecommendedBet.setBounds(40, 331, 243, 28);
-		panel.add(lblRecommendedBet);
+		panel.add(lblEgb_1, "cell 7 5,growx,aligny top");
 		
 		lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
-		lblTimeLeftTill.setBounds(40, 236, 175, 16);
-		panel.add(lblTimeLeftTill);
+		panel.add(lblTimeLeftTill, "cell 0 7 4 1,growx,aligny top");
 		
 		JButton btnOpenInBrowser = new JButton("Open in Browser");
 		btnOpenInBrowser.addActionListener(new ActionListener() {
@@ -303,70 +327,29 @@ public class MainWindow {
 				openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getLoungeID());
 			}
 		});
-		btnOpenInBrowser.setBounds(263, 748, 153, 38);
-		panel.add(btnOpenInBrowser);
+		
+		lblRecommendedBet = new JLabel("Recommended bet:\r\n");
+		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
+		panel.add(lblRecommendedBet, "cell 0 10,growx,aligny center");
+		panel.add(btnOpenInBrowser, "cell 7 27,growx,aligny bottom");
 		
 		/**
 		 * Suchfeld um Matcharchiv nach Stichworten zu durchsuchen
 		 */
-		txtSuche = new JTextField();
-		txtSuche.setText("Suche...");
-		txtSuche.setBounds(1007, 69, 151, 28);
-		frmCsgoBettingCalculator.getContentPane().add(txtSuche);
-		txtSuche.setColumns(10);
-		
-		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 "
-				+ "<br> Match auf Event Syntax: Team1 + Team2 + Event </html>");
-		
-		/**
-		 * Startet die Suche
-		 */
-		JButton btnNewButton = new JButton("go!");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createSuchList(txtSuche.getText());
-				//table.repaint();
-			}
-
-		});
-		
-		btnNewButton.setBounds(1170, 69, 53, 28);
-		frmCsgoBettingCalculator.getContentPane().add(btnNewButton);
 		
 		/**
 		 * Wenn ins Suchfeld geklickt wird, wird der Inhalt geloescht, jedoch nur falls bisher
 		 * nichts eingegeben wurde
 		 */
-        txtSuche.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(txtSuche.getText().equals("Suche...")){
-                   txtSuche.setText(null);
-                }
-            }
-        });
         
         /**
          * Emuliert einen Klick auf den Suchbutton
          */
-        txtSuche.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		btnNewButton.doClick();
-        	}
-        });
         
         /**
          * Setzt den Text des Feldes wieder auf "Suche...",
          * falls nichts eingegeben wurde und man woanders hinklickt
          */
-        txtSuche.addFocusListener(new FocusAdapter() {
-        	@Override
-        	public void focusLost(FocusEvent arg0) {
-        		if(txtSuche.getText().equals("")){
-        			txtSuche.setText("Suche...");
-        		}
-        	}
-        });
         
 	}
 	
