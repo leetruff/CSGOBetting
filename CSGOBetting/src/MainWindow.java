@@ -24,10 +24,12 @@ import javax.swing.JTextField;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
+import Comparators.DevFrame;
 import Comparators.DoubleComparator;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -65,6 +67,7 @@ public class MainWindow {
 	private JLabel lblTimeLeftTill;
 
 	private JButton btnNewButton;
+	private JButton btnDevtools;
 
 
 	/**
@@ -122,6 +125,17 @@ public class MainWindow {
 		 * Scrollpane fuer unsere Tabelle
 		 */
 		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[107px][755.00px][151px][61.00px][127.00px][422px]", "[63px][824.00px]"));
+		
+		btnDevtools = new JButton("DevTools");
+		btnDevtools.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				DevFrame devFrame = new DevFrame();
+				devFrame.setVisible(true);
+			}
+		});
+		frmCsgoBettingCalculator.getContentPane().add(btnDevtools, "cell 1 0");
+		
+		
 		txtSuche = new JTextField();
 		txtSuche.setText("Suche...");
 		frmCsgoBettingCalculator.getContentPane().add(txtSuche, "cell 2 0,growx,aligny bottom");
