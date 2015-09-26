@@ -1,3 +1,4 @@
+package Krimskrams;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,7 +26,7 @@ public class Launcher {
 			matchString = s.nextLine();
 		}
 		
-		//matchArray enthält den nicht formattierten Info String zu jedem Match
+		//matchArray enthï¿½lt den nicht formattierten Info String zu jedem Match
 		String[] matchArray = matchString.split("\\{");
 		
 		//selbes Spiel mit den Odds, welche von matches_stats kommen
@@ -40,7 +41,7 @@ public class Launcher {
 			matchString = s.nextLine();
 		}
 		
-		//matchArray2 enthält zu jedem Match die Odds, Ids stimmen mit matchArray überein
+		//matchArray2 enthï¿½lt zu jedem Match die Odds, Ids stimmen mit matchArray ï¿½berein
 		String[] matchArray2 = matchString.split("\\{");
 		
 		//erstellen eines Files in C:\csgobetting\CSGOLoungeData.txt
@@ -61,11 +62,11 @@ public class Launcher {
 		
 		//erstellen eines PrintWriters im append=true modus um neue Games ins file einzutragen
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
-			//updateStartingId wird dafür benutzt, nicht jeden eintrag aktualisieren zu müssen, sondern nur neue matches
+			//updateStartingId wird dafï¿½r benutzt, nicht jeden eintrag aktualisieren zu mï¿½ssen, sondern nur neue matches
 			int updateStartingId = 1;
 			int lastUnclosedMatch = 1;
 			
-			//falls das File erst angelegt wurde, Kopfzeile einfügen, ansonsten checken ab wann aktualisiert werden muss
+			//falls das File erst angelegt wurde, Kopfzeile einfï¿½gen, ansonsten checken ab wann aktualisiert werden muss
 			if(!fileExists){
 				out.println("ID\tY\tM\tD\tH\tM\tTeam1\tT1Odds\tTeam2\tT2Odds\tWinner\tClosed\tEvent\tFormat;");
 				for(int i=1; i<matchArray.length; i++){
@@ -94,7 +95,7 @@ public class Launcher {
 				//delete last N lines, where N is the amount of matches that have to be updated
 				newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
 				length = f.length() - 1;
-				//Setzt den filePointer genau N zeilen zurück, N = matchArray.length - updateStartingId+1
+				//Setzt den filePointer genau N zeilen zurï¿½ck, N = matchArray.length - updateStartingId+1
 				for(int i=0; i<matchArray.length - updateStartingId+1;i++){
 					do {                     
 					  length -= 1;
@@ -125,11 +126,11 @@ public class Launcher {
 				//Ausschneiden der Infos mit substring(indexof(anfang info), indexof(ende info))
 				//beginne matchLine mit der matchId welche zwischen "match" und ","when" steht
 		    	String matchLine = matchArray[i].substring(matchArray[i].indexOf("\"match\"")+9, matchArray[i].indexOf("\",\"when")) + ";";
-		    	//lese einen Integer für die Id aus um in dem Odds array danach zu suchen
+		    	//lese einen Integer fï¿½r die Id aus um in dem Odds array danach zu suchen
 		    	int matchId = Integer.parseInt(matchLine.substring(0, matchLine.length()-1));
 		    	//Lese das match datum aus, format "YYYY-MM-DD HH:MM:SS", kommt nach "when"
 		    	String temp = matchArray[i].substring(matchArray[i].indexOf("when")+7, matchArray[i].indexOf("\",\"a"));
-		    	//teile das Datum in die Komponenten und hänge sie einzeln an
+		    	//teile das Datum in die Komponenten und hï¿½nge sie einzeln an
 		    	matchLine += temp.substring(0, 4) +";"+ temp.substring(5, 7) +";"+ temp.substring(8, 10) +";"+ temp.substring(11, 13) +";" + temp.substring(14, 16) +";";
 		    	//Name des ersten Teams
 		    	temp = matchArray[i].substring(matchArray[i].indexOf("a\":\"")+4, matchArray[i].indexOf(",\"b\"")-1);
@@ -138,7 +139,7 @@ public class Launcher {
 		    	//get odds for team a, dummy variable wasSucc indicates if odds are availible for this match
 		    	boolean wasSucc = false;
 		    	for(int j=1; j<matchArray2.length; j++){
-		    		//in matchArray2 stehen die Odds, aber nicht für jedes match gibt es odds deshalb die Kontrolle mit wasSucc
+		    		//in matchArray2 stehen die Odds, aber nicht fï¿½r jedes match gibt es odds deshalb die Kontrolle mit wasSucc
 		    		if(Integer.parseInt(matchArray2[j].substring(matchArray2[j].indexOf("match")+8, matchArray2[j].indexOf("\"", matchArray2[j].indexOf("match")+8))) == matchId){
 		    			temp = matchArray2[j].substring(matchArray2[j].indexOf("a\":\"")+4, matchArray2[j].indexOf(",\"b")-1);
 		    			matchLine+=temp+";";
@@ -179,16 +180,16 @@ public class Launcher {
 		    	//info ob das match geschlossen ist
 		    	temp = matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10);
 		    	matchLine += temp + ";";
-		    	//info über das Turnier
+		    	//info ï¿½ber das Turnier
 		    	temp = matchArray[i].substring(matchArray[i].indexOf("event")+8, matchArray[i].indexOf(",\"format")-1);
 		    	matchLine += temp + ";";
-		    	//info über Bo1,3,5 etc
+		    	//info ï¿½ber Bo1,3,5 etc
 		    	temp = matchArray[i].substring(matchArray[i].indexOf("format")+9, matchArray[i].indexOf("format")+10);
 		    	matchLine += temp;
 		    	//schreiben der Zeile in die Datei
 		    	out.println(matchLine);
 		    }
-			//Schreiben des aktuellsten Stands in die letzte Zeile der Datei um später von dort aus weiter machen zu können
+			//Schreiben des aktuellsten Stands in die letzte Zeile der Datei um spï¿½ter von dort aus weiter machen zu kï¿½nnen
 			out.println(lastUnclosedMatch);
 	    	System.out.println("fertig");
 			out.close();
