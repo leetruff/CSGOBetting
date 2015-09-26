@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Class that contains all needed functions to gather match information and to update files. To use it, just create an object and call the
+ * required functions.
+ * @author Tobi
+ *
+ */
 public class MatchInformation {
 	/**
 	 * Creates and/or updates a file in "C:\csgobetting\CSGOLoungeData.txt" with all saved matches from CSGO Lounge. For every match
