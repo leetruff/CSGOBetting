@@ -1,11 +1,12 @@
+package Interface;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,22 +16,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.JTextField;
-
-import com.sun.xml.internal.ws.util.StringUtils;
-
-import Comparators.DevFrame;
-import Comparators.DoubleComparator;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 import net.miginfocom.swing.MigLayout;
+import Comparators.DoubleComparator;
+import Controller.ListenController;
+import MatchInformation.Match;
+import Renderer.Team1TableCellRenderer;
+import Renderer.Team2TableCellRenderer;
 
 /**
  * 
