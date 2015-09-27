@@ -266,13 +266,20 @@ public class ListenController {
 			}
 			
 			
-			if(Integer.parseInt(switchedTeams) == 1){
-				egbMatch.setSwitched(true);
+			try {
+				if(Integer.parseInt(switchedTeams) == 1){
+					egbMatch.setSwitched(true);
+				}
+
+
+				loungeMatch.setRelatedEGBMatch(egbMatch);
+				tempList.add(loungeMatch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println("Liegt vermutlich daran, dass Odds fuer ein Team 0 sind, und deswegen ein Match nicht erstellt wurde. LoungeID: "
+						+ loungeID + " egbID: " + egbID);
 			}
-		
-		
-			loungeMatch.setRelatedEGBMatch(egbMatch);
-			tempList.add(loungeMatch);
 		
 		}
 		
@@ -321,13 +328,19 @@ public class ListenController {
 			}
 			
 			
-			if(Integer.parseInt(switchedTeams) == 1){
-				egbMatch.setSwitched(true);
+			try {
+				if(Integer.parseInt(switchedTeams) == 1){
+					egbMatch.setSwitched(true);
+				}
+				
+				loungeMatch.setRelatedEGBMatch(egbMatch);
+				tempList.add(loungeMatch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println("Liegt vermutlich daran, dass Odds fuer ein Team 0 sind, und deswegen ein Match nicht erstellt wurde. LoungeID: "
+						+ loungeID + " egbID: " + egbID);
 			}
-			
-			System.out.println("lounge: " + loungeID + " EGB: " + egbID);
-			loungeMatch.setRelatedEGBMatch(egbMatch);
-			tempList.add(loungeMatch);
 		
 		}
 		
