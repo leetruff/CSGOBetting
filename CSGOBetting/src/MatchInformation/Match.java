@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Match {
 
-	String loungeID;
+	String id;
 
 	String team1Name;
 	String team2Name;
@@ -21,6 +21,7 @@ public class Match {
 	String team1EGBOdds;
 	String team2EGBOdds;
 	int winner;
+	Match relatedEGBMatch;
 	
 	/**
 	 * Konstruktor fuer ein {@link Match}, welcher die Matchspezifischen Eigenschaften setzt
@@ -28,7 +29,7 @@ public class Match {
 	public Match(String id, String team1Name, String team2Name, String eventName, int matchType, Date datum, 
 			String team1LoungeOdds, String team2LoungeOdds){
 		
-		this.loungeID = id;
+		this.id = id;
 		this.team1Name = team1Name;
 		this.team2Name = team2Name;
 		this.eventName = eventName;
@@ -46,8 +47,8 @@ public class Match {
 	 * Getters
 	 */
 	
-	public String getLoungeID() {
-		return loungeID;
+	public String getID() {
+		return id;
 	}
 	
 	public String getTeam1Name() {
@@ -84,6 +85,10 @@ public class Match {
 	
 	public String getTeam2EGBOdds() {
 		return team2EGBOdds;
+	}
+	
+	public void setRelatedEGBMatch(Match relMatch){
+		relatedEGBMatch = relMatch;
 	}
 
 

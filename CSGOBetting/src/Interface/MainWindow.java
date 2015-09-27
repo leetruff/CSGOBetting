@@ -29,6 +29,8 @@ import Controller.ListenController;
 import MatchInformation.Match;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  * 
@@ -42,7 +44,7 @@ public class MainWindow {
 	private JFrame frmCsgoBettingCalculator;
 	private JTable table;
 	private JTextField txtSuche;
-	private ArrayList<Match> matchList;
+	private ArrayList<Match> loungeMatchList;
 	private ArrayList<Match> suchList;
 	private ArrayList<Match> aktuelleList;
 
@@ -66,6 +68,7 @@ public class MainWindow {
 
 	private JButton btnNewButton;
 	private JButton btnDevtools;
+	private JComboBox comboBox;
 
 
 	/**
@@ -94,16 +97,18 @@ public class MainWindow {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public MainWindow() {
+	public MainWindow() throws IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	@SuppressWarnings({ "serial", "deprecation" })
-	private void initialize() {
+	@SuppressWarnings({ "serial", "deprecation", "rawtypes", "unchecked" })
+	private void initialize() throws IOException {
 		
 		try {
 			listCtrl = new ListenController();
@@ -122,7 +127,7 @@ public class MainWindow {
 		/**
 		 * Scrollpane fuer unsere Tabelle
 		 */
-		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[107px][755.00px][151px][61.00px][127.00px][422px]", "[63px][824.00px]"));
+		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[83.00px][88.00][-18.00][318.00px][151px][61.00px][127.00px][422px]", "[63px][824.00px]"));
 		
 		btnDevtools = new JButton("DevTools");
 		btnDevtools.addActionListener(new ActionListener() {
@@ -136,7 +141,7 @@ public class MainWindow {
 		
 		txtSuche = new JTextField();
 		txtSuche.setText("Suche...");
-		frmCsgoBettingCalculator.getContentPane().add(txtSuche, "cell 2 0,growx,aligny bottom");
+		frmCsgoBettingCalculator.getContentPane().add(txtSuche, "cell 4 0,growx,aligny bottom");
 		txtSuche.setColumns(10);
 		
 		txtSuche.setToolTipText("<html> Eingabefeld für Stichworte. <br> Matchup Syntax: Team1 + Team2 "
@@ -171,9 +176,9 @@ public class MainWindow {
 			}
 
 		});
-		frmCsgoBettingCalculator.getContentPane().add(btnNewButton, "cell 3 0,alignx center,aligny bottom");
+		frmCsgoBettingCalculator.getContentPane().add(btnNewButton, "cell 5 0,alignx center,aligny bottom");
 		JScrollPane scrollPane = new JScrollPane();
-		frmCsgoBettingCalculator.getContentPane().add(scrollPane, "cell 0 1 5 1,grow");
+		frmCsgoBettingCalculator.getContentPane().add(scrollPane, "cell 0 1 7 1,grow");
 		
 		/**
 		 * Table mit unseren Matches
@@ -246,8 +251,70 @@ public class MainWindow {
 		/**
 		 * Liste von <Matches> aus dem ListenController beziehen
 		 */
-		matchList = listCtrl.getMatches();
-		aktuelleList = matchList;
+		loungeMatchList = listCtrl.getLoungeMatches();
+		aktuelleList = listCtrl.getBothMatches();
+		
+		comboBox = new JComboBox();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String currentItem = (String) comboBox.getSelectedItem();
+				switch (currentItem) {
+				case "CSGL + EGB":
+					try {
+						aktuelleList = listCtrl.getBothMatches();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					listCtrl.setAktuelleList(aktuelleList);
+					updateTable();
+					break;
+					
+				case "CSGL":
+					aktuelleList = listCtrl.getLoungeMatches();
+					listCtrl.setAktuelleList(aktuelleList);
+					updateTable();
+					break;
+					
+				case "EGB":
+					aktuelleList = listCtrl.getEGBMatches();
+					listCtrl.setAktuelleList(aktuelleList);
+					updateTable();
+					break;
+
+				default:
+					break;
+				}
+				
+			}
+		});
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"CSGL + EGB", "CSGL", "EGB"}));
+		frmCsgoBettingCalculator.getContentPane().add(comboBox, "cell 2 0 2 1,alignx left");
+		
+		String currentItem = (String) comboBox.getSelectedItem();
+		switch (currentItem) {
+		case "CSGL + EGB":
+			aktuelleList = listCtrl.getBothMatches();
+			listCtrl.setAktuelleList(aktuelleList);
+			updateTable();
+			break;
+			
+		case "CSGL":
+			aktuelleList = listCtrl.getLoungeMatches();
+			listCtrl.setAktuelleList(aktuelleList);
+			updateTable();
+			break;
+			
+		case "EGB":
+			aktuelleList = listCtrl.getEGBMatches();
+			listCtrl.setAktuelleList(aktuelleList);
+			updateTable();
+			break;
+
+		default:
+			break;
+		}
 		
 		
 		/**
@@ -260,11 +327,20 @@ public class MainWindow {
 				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
 				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
 				
+				double team1Odds;
+				double team2Odds;
 				/**
 				 * Odds als prozentuale Werte berechnen
 				 */
-				double team1Odds = team1 / (team1 + team2) *100;
-				double team2Odds = team2 / (team1 + team2) *100;
+				if(!aktuelleList.get(i).getTeam1LoungeOdds().contains(".")){
+					team1Odds = team1 / (team1 + team2) *100;
+					team2Odds = team2 / (team1 + team2) *100;
+				}
+				
+				else{
+					team1Odds = team2 / (team1 + team2) *100;
+					team2Odds = team1 / (team1 + team2) *100;
+				}
 				
 				/**
 				 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
@@ -300,7 +376,7 @@ public class MainWindow {
 		 */
 		JPanel panel = new JPanel();
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		frmCsgoBettingCalculator.getContentPane().add(panel, "cell 5 1,grow");
+		frmCsgoBettingCalculator.getContentPane().add(panel, "cell 7 1,grow");
 		
 		/**
 		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
@@ -336,7 +412,7 @@ public class MainWindow {
 		JButton btnOpenInBrowser = new JButton("Open in Browser");
 		btnOpenInBrowser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getLoungeID());
+				openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getID());
 			}
 		});
 		
@@ -344,6 +420,7 @@ public class MainWindow {
 		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
 		panel.add(lblRecommendedBet, "cell 0 10,growx,aligny center");
 		panel.add(btnOpenInBrowser, "cell 7 27,growx,aligny bottom");
+		
 		
 		/**
 		 * Suchfeld um Matcharchiv nach Stichworten zu durchsuchen
@@ -382,22 +459,54 @@ public class MainWindow {
 		}
 		
 		if(text.equals("") || text == null || text.equals("Suche...")){
-			aktuelleList = listCtrl.getMatches();
+			
+			String currentItem = (String) comboBox.getSelectedItem();
+			switch (currentItem) {
+			case "CSGL + EGB":
+				try {
+					aktuelleList = listCtrl.getBothMatches();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				listCtrl.setAktuelleList(aktuelleList);
+				updateTable();
+				break;
+				
+			case "CSGL":
+				aktuelleList = listCtrl.getLoungeMatches();
+				listCtrl.setAktuelleList(aktuelleList);
+				updateTable();
+				break;
+				
+			case "EGB":
+				aktuelleList = listCtrl.getEGBMatches();
+				listCtrl.setAktuelleList(aktuelleList);
+				updateTable();
+				break;
+
+			default:
+				break;
+			}
+			
 		}
 		
 		else if(count == 2){
 			ArrayList<Match> suchListe = listCtrl.erwSuchListeEvent(text.split(" "));
 			aktuelleList = suchListe;
+			listCtrl.setAktuelleList(aktuelleList);
 		}
 		
 		else if(text.contains("+")){
 			ArrayList<Match> suchListe = listCtrl.erwSuchListe(text.split(" "));
 			aktuelleList = suchListe;
+			listCtrl.setAktuelleList(aktuelleList);
 		}
 		
 		else{
 			ArrayList<Match> suchListe = listCtrl.einfSuchListe(text.split(" "));
 			aktuelleList = suchListe;
+			listCtrl.setAktuelleList(aktuelleList);
 		}
 		
 		updateTable();
@@ -474,15 +583,24 @@ public class MainWindow {
     		 */
     		for(int i = aktuelleList.size()-1; i >= 0; i--){
     			
-    			if(!(Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0)){
+    			if(!(aktuelleList.get(i).getTeam1LoungeOdds().startsWith("0") || aktuelleList.get(i).getTeam2LoungeOdds().startsWith("0"))){
     				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
     				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
     				
+    				double team1Odds;
+    				double team2Odds;
     				/**
     				 * Odds als prozentuale Werte berechnen
     				 */
-    				double team1Odds = team1 / (team1 + team2) *100;
-    				double team2Odds = team2 / (team1 + team2) *100;
+    				if(!aktuelleList.get(i).getTeam1LoungeOdds().contains(".")){
+    					team1Odds = team1 / (team1 + team2) *100;
+    					team2Odds = team2 / (team1 + team2) *100;
+    				}
+    				
+    				else{
+    					team1Odds = team2 / (team1 + team2) *100;
+    					team2Odds = team1 / (team1 + team2) *100;
+    				}
     				
     				/**
     				 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach

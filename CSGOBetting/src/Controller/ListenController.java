@@ -26,7 +26,9 @@ public class ListenController {
 	String filepath = "C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt";
 	BufferedReader reader = null;
 	StringTokenizer tokenizer;
-	ArrayList<Match> matchList;
+	ArrayList<Match> loungeMatchList;
+	ArrayList<Match> egbMatchList;
+	ArrayList<Match> bothMatchList;
 	ArrayList<Match> aktuelleList;
 	
 	
@@ -43,17 +45,22 @@ public class ListenController {
 		}
 		
 		//tokenizer = new StringTokenizer(str, ";");
-		matchList = new ArrayList<Match>();
-		aktuelleList = null;
-		readMatchDateFromFile();
+		loungeMatchList = new ArrayList<Match>();
+		egbMatchList = new ArrayList<Match>();
+		bothMatchList = new ArrayList<Match>();
+		
+		readLoungeDataFromFile();
+		readEGBDataFromFile();
+		
+		aktuelleList = getLoungeMatches();
 	}
 	
 	
 	/**
-	 * Liest unser MatchdatenFile und erstellt daraus eine {@link java.util.ArrayList Liste} von {@link Match Matches}
+	 * Liest unser LoungeMatchdatenFile und erstellt daraus eine {@link java.util.ArrayList Liste} von {@link Match Matches}
 	 * @throws IOException
 	 */
-	private void readMatchDateFromFile() throws IOException{
+	private void readLoungeDataFromFile() throws IOException{
 		
 		String line;
 		/**
@@ -112,7 +119,7 @@ public class ListenController {
 				 * Hinzufuegen des Matches in unsere Archivliste, falls es keine 0er Odds enthaelt.
 				 */
 				if(!(Integer.parseInt(team1Odds) == 0 || Integer.parseInt(team2Odds) == 0)){
-					matchList.add(match);
+					loungeMatchList.add(match);
 				}
 			} 
 			/**
@@ -127,22 +134,169 @@ public class ListenController {
 		
 	}
 	
+	
+	/**
+	 * Liest unser EGBMatchdatenFile und erstellt daraus eine {@link java.util.ArrayList Liste} von {@link Match Matches}
+	 * @throws IOException
+	 */
+	@SuppressWarnings("resource")
+	private void readEGBDataFromFile() throws IOException{
+		
+		String line;
+		File file = new File("C:"+File.separator+"csgobetting"+File.separator+"EGBData.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		/**
+		 * Laeuft bis es die erste Zeile findet, welche kein Semikolon enthaelt (also exakt die letzte Zeile des Files)
+		 */
+		while(((line = reader.readLine()) != null) && line.contains(";")){
+			
+			try {
+				/**
+				 * Erste Zeile ueberspringen
+				 */
+				if(line.startsWith("ID")){
+					continue;
+				}
+				
+				//TODO: tokenizer durch string.split() ersetzen.
+				/**
+				 * String zerlegen und einzelne Werte auslesen
+				 */
+				tokenizer = new StringTokenizer(line, ";");
+				String matchID = tokenizer.nextToken();
+				String jahr = tokenizer.nextToken();
+				String monat = tokenizer.nextToken();
+				String tag = tokenizer.nextToken();
+				String stunde = tokenizer.nextToken();
+				String minute = tokenizer.nextToken();
+				String team1 = tokenizer.nextToken();
+				String team1Odds = tokenizer.nextToken();
+				String team2 = tokenizer.nextToken();
+				String team2Odds = tokenizer.nextToken();
+				String winner = tokenizer.nextToken();
+				String finished = tokenizer.nextToken();
+				String event = tokenizer.nextToken();
+				//String matchType = tokenizer.nextToken();
+				
+				/**
+				 * Jahr ist irgendwie immer mit 1900 initialisiert und wird komischerweise immer zur Eingabe hinzuaddiert.
+				 * Deshalb 1900 subtrahieren.
+				 */
+				jahr = "" + (Integer.parseInt(jahr) - 1900);
+				
+				/**
+				 * Date Objekt anlegen, ist zwar deprecated aber funktioniert noch super.
+				 */
+				@SuppressWarnings("deprecation")
+				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
+				
+				/**
+				 * Match Objekt mit entsprechenden Informationen anlegen.
+				 */
+				Match match = new Match(matchID, team1, team2, event, 0, date, team1Odds, team2Odds);
+				
+				match.setWinner(Integer.parseInt(winner));
+				
+				/**
+				 * Hinzufuegen des Matches in unsere Archivliste, falls es keine 0er Odds enthaelt.
+				 */
+				if(!(team1Odds.startsWith("0") || team2Odds.startsWith("0") || team1.contains("Map ") || team2.contains("Map ") || team1.contains("map ") || team2.contains("map "))){
+					egbMatchList.add(match);
+				}
+			} 
+			/**
+			 * Jegliche Exception die geworfen werden kann, deutet darauf hin, dass die entsprechende
+			 * Zeile des Files ein Match enthaelt, welches fehlerhafe Informationen enthaelt. Deshalb
+			 * koennen wir dies einfach ueberspringen und nicht in unser Matcharchiv mit aufnehmen. 
+			 */
+			catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+		}
+		
+	}
+	
+	public ArrayList<Match> getBothMatches() throws IOException {
+
+		//TODO Liste von CSGL Matches, welche auch in der EGB Liste drin sind. Hierfuer LinkedListOpen benutzen.
+		File file = new File("C:"+File.separator+"csgobetting"+File.separator+"linklistopen.txt");
+		@SuppressWarnings("resource")
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		ArrayList<Match> tempList = new ArrayList<Match>();
+		ArrayList<Match> loungeMatches = getLoungeMatches();
+		ArrayList<Match> egbMatches = getEGBMatches();
+		
+		StringTokenizer tokenizer;
+		String line;
+		
+		while(((line = reader.readLine()) != null) && line.contains(";")){
+			
+			tokenizer = new StringTokenizer(line, ";");
+			
+			String loungeID = tokenizer.nextToken();
+			String egbID = tokenizer.nextToken();
+			String switchedTeams = tokenizer.nextToken();
+			
+			
+			Match loungeMatch = null;
+			Match egbMatch = null;
+			
+			for(int i = loungeMatches.size()-1; i > loungeMatches.size()-50; i--){
+				if(loungeMatches.get(i).getID().equals(loungeID)){
+					loungeMatch = loungeMatches.get(i);
+					break;
+				}
+			}
+			
+			for(int i = egbMatches.size()-1; i > egbMatches.size()-50; i--){
+				if(egbMatches.get(i).getID().equals(egbID)){
+					egbMatch = egbMatches.get(i);
+					break;
+				}
+			}
+			
+			loungeMatch.setRelatedEGBMatch(egbMatch);
+			tempList.add(loungeMatch);
+			
+		}
+		
+		bothMatchList = tempList;
+		return bothMatchList;
+	}
+	
 	/**
 	 * main zum testen / debuggen
 	 * @return
 	 */
-//	public static void main(String[] args) throws IOException{
-//		ListenController lctrl = new ListenController();
-//		ArrayList<Match> liste = lctrl.getMatches();
-//	}
-//	
+	public static void main(String[] args) throws IOException{
+		ListenController lctrl = new ListenController();
+		ArrayList<Match> liste = lctrl.getLoungeMatches();
+		
+		System.out.println("" + liste.size());
+		liste = lctrl.getEGBMatches();
+		System.out.println("" + liste.size());
+		liste = lctrl.getBothMatches();
+		System.out.println("" + liste.size());
+	}
+	
 	
 	/**
 	 * Getter fuer unsere {@link java.util.ArrayList Liste} von {@link Match Matches}
 	 * @return Matchliste mit allen aus dem File ausgelesenen, gueltigen Matches.
 	 */
-	public ArrayList<Match> getMatches(){
-		return matchList;
+	public ArrayList<Match> getLoungeMatches(){
+		return loungeMatchList;
+	}
+	
+	/**
+	 * Getter fuer unsere {@link java.util.ArrayList Liste} von {@link Match Matches}
+	 * @return Matchliste mit allen aus dem File ausgelesenen, gueltigen Matches.
+	 */
+	public ArrayList<Match> getEGBMatches(){
+		return egbMatchList;
 	}
 	
 	/**
@@ -161,7 +315,7 @@ public class ListenController {
 	 */
 	public ArrayList<Match> einfSuchListe(String... begriffe){
 		ArrayList<Match> temp = new ArrayList<Match>();
-		ArrayList<Match> matches = getMatches();
+		ArrayList<Match> matches = getAktuelleListe();
 		
 		for(int i = 0; i < matches.size(); i++){
 			Match match = matches.get(i);
@@ -185,7 +339,7 @@ public class ListenController {
 	public ArrayList<Match> erwSuchListe(String... begriffe) {
 		
 		ArrayList<Match> temp = new ArrayList<Match>();
-		ArrayList<Match> matches = getMatches();
+		ArrayList<Match> matches = getAktuelleListe();
 		
 		
 		for(int i = 0; i < matches.size(); i++){
@@ -210,7 +364,7 @@ public class ListenController {
 	public ArrayList<Match> erwSuchListeEvent(String... begriffe) {
 
 		ArrayList<Match> temp = new ArrayList<Match>();
-		ArrayList<Match> matches = getMatches();
+		ArrayList<Match> matches = getAktuelleListe();
 		
 		
 		for(int i = 0; i < matches.size(); i++){
@@ -224,6 +378,11 @@ public class ListenController {
 		
 		return aktuelleList;
 	}
+
+	public void setAktuelleList(ArrayList<Match> list){
+		this.aktuelleList = list;
+	}
+
 	
 	
 }
