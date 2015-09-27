@@ -688,7 +688,6 @@ public class MainWindow {
 		 */
 		double team1Odds = team1 / (team1 + team2) *100;
 		double team2Odds = team2 / (team1 + team2) *100;
-		
 		/**
 		 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommastellen einfach
 		 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
