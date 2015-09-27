@@ -669,7 +669,10 @@ public class MatchInformation {
 		//TempFile zum Main File machen und main file löschen
 		inputFile = new File("C:"+File.separator+"csgobetting"+File.separator+"EGBData.txt");
 		tempFile = new File("C:"+File.separator+"csgobetting"+File.separator+"EGBDataNew.txt");
-		if(inputFile.exists())inputFile.delete();
+		if(inputFile.exists()){
+			System.gc();
+			inputFile.delete();
+		}
 		System.out.println(tempFile.renameTo(inputFile));
 	}
 
@@ -686,7 +689,10 @@ public class MatchInformation {
 		String path = "C:"+File.separator+"csgobetting"+File.separator+"linklistopen.txt";
 		//(use relative path for Unix systems)
 		File f = new File(path);
-		if(f.exists())f.delete();
+		if(f.exists()){
+			System.gc();
+			f.delete();
+		}
 		//(works for both Windows and Linux)
 		f.getParentFile().mkdirs();
 		try {
