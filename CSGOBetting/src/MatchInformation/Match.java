@@ -22,6 +22,7 @@ public class Match {
 	String team2EGBOdds;
 	int winner;
 	Match relatedEGBMatch;
+	public boolean isSwitched;
 	
 	/**
 	 * Konstruktor fuer ein {@link Match}, welcher die Matchspezifischen Eigenschaften setzt
@@ -95,6 +96,13 @@ public class Match {
 		return relatedEGBMatch;
 	}
 
+	public void setSwitched(boolean switched){
+		isSwitched = switched;
+	}
+	
+	public boolean isSwitched(){
+		return isSwitched;
+	}
 
 	/**
 	 * Hilfsmethode, sucht nach Stichworten in einigen Eigenschaften des {@link Match Matches}

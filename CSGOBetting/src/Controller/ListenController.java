@@ -263,6 +263,10 @@ public class ListenController {
 				}
 			}
 			
+			if(Integer.parseInt(switchedTeams) == 1){
+				egbMatch.setSwitched(true);
+			}
+			
 			loungeMatch.setRelatedEGBMatch(egbMatch);
 			tempList.add(loungeMatch);
 			
