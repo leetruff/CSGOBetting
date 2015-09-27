@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import MatchInformation.MatchInformation;
+import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class DevFrame extends JFrame {
@@ -53,22 +54,31 @@ public class DevFrame extends JFrame {
 				Info = null;
 			}
 		});
-		btnButton.setBounds(10, 26, 140, 23);
+		btnButton.setBounds(10, 26, 213, 23);
 		contentPane.add(btnButton);
+		
+		JLabel lblDebugstring = new JLabel("Debugstring");
+		lblDebugstring.setBounds(10, 236, 338, 14);
+		contentPane.add(lblDebugstring);
 		
 		JButton btnButton_1 = new JButton("Update everything");
 		btnButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO Was soll Button 1 machen?
 				MatchInformation Info = new MatchInformation();
+				lblDebugstring.setText("Updating Lounge File");
 				Info.createLoungeFile();
+				lblDebugstring.setText("Updating EGB File");
 				Info.createEGBFile();
+				lblDebugstring.setText("Updating linklistclosed File");
 				Info.createClosedBetLinkList();
+				lblDebugstring.setText("Updating linklistopen File");
 				Info.createOpenBetLinkList();
+				lblDebugstring.setText("Finished");
 				Info = null;
 			}
 		});
-		btnButton_1.setBounds(173, 26, 132, 23);
+		btnButton_1.setBounds(10, 60, 213, 23);
 		contentPane.add(btnButton_1);
 		
 		JButton btnButton_2 = new JButton("Get EGB line");
@@ -80,7 +90,7 @@ public class DevFrame extends JFrame {
 				Info=null;
 			}
 		});
-		btnButton_2.setBounds(335, 26, 89, 23);
+		btnButton_2.setBounds(10, 94, 213, 23);
 		contentPane.add(btnButton_2);
 	}
 }

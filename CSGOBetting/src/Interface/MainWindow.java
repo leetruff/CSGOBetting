@@ -116,7 +116,7 @@ public class MainWindow {
 		 */
 		frmCsgoBettingCalculator = new JFrame();
 		frmCsgoBettingCalculator.setTitle("CSGO Betting Calculator V0.1");
-		frmCsgoBettingCalculator.setBounds(100, 100, 1700, 956);
+		frmCsgoBettingCalculator.setBounds(100, 100, 1280, 720);
 		frmCsgoBettingCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		/**

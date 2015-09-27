@@ -69,6 +69,7 @@ public class ListenController {
 					continue;
 				}
 				
+				//TODO: tokenizer durch string.split() ersetzen.
 				/**
 				 * String zerlegen und einzelne Werte auslesen
 				 */
