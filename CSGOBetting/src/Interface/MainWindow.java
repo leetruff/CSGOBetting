@@ -8,9 +8,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,13 +27,12 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import net.miginfocom.swing.MigLayout;
+import Comparators.DateComparator;
 import Comparators.DoubleComparator;
 import Controller.ListenController;
 import MatchInformation.Match;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 /**
  * 
@@ -38,6 +40,8 @@ import javax.swing.DefaultComboBoxModel;
  *
  */
 public class MainWindow {
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 	private ListenController listCtrl;
 	
@@ -244,6 +248,7 @@ public class MainWindow {
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 		sorter.setComparator(2, new DoubleComparator());
 		sorter.setComparator(3, new DoubleComparator());
+		sorter.setComparator(7, new DateComparator());
 		table.setRowSorter(sorter);
 		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -378,7 +383,7 @@ public class MainWindow {
 				 */
 				model.addRow(new Object[]{aktuelleList.get(i).getWinner(), aktuelleList.get(i).getTeam1Name(), team1Odds+"%",
 					team2Odds+"%", aktuelleList.get(i).getTeam2Name(),"BO" + aktuelleList.get(i).getMatchType(), aktuelleList.get(i).getEventName(),
-					aktuelleList.get(i).getDatum().toGMTString()});
+					sdf.format(aktuelleList.get(i).getDatum().getTime())});
 				}
 		}
 		
@@ -655,7 +660,7 @@ public class MainWindow {
     				 */
     				model.addRow(new Object[]{aktuelleList.get(i).getWinner(), aktuelleList.get(i).getTeam1Name(), team1Odds+"%",
     					team2Odds+"%", aktuelleList.get(i).getTeam2Name(),"BO" + aktuelleList.get(i).getMatchType(), aktuelleList.get(i).getEventName(),
-    					aktuelleList.get(i).getDatum().toGMTString()});
+    					sdf.format(aktuelleList.get(i).getDatum().getTime())});
     				}
     		}
 	}

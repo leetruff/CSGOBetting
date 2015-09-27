@@ -1,5 +1,6 @@
 package MatchInformation;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -15,7 +16,7 @@ public class Match {
 	String team2Name;
 	String eventName;
 	int matchType;
-	Date datum;
+	GregorianCalendar datum;
 	String team1LoungeOdds;
 	String team2LoungeOdds;
 	String team1EGBOdds;
@@ -27,7 +28,7 @@ public class Match {
 	/**
 	 * Konstruktor fuer ein {@link Match}, welcher die Matchspezifischen Eigenschaften setzt
 	 */
-	public Match(String id, String team1Name, String team2Name, String eventName, int matchType, Date datum, 
+	public Match(String id, String team1Name, String team2Name, String eventName, int matchType, GregorianCalendar datum, 
 			String team1LoungeOdds, String team2LoungeOdds){
 		
 		this.id = id;
@@ -68,7 +69,7 @@ public class Match {
 		return matchType;
 	}
 	
-	public Date getDatum() {
+	public GregorianCalendar getDatum() {
 		return datum;
 	}
 	

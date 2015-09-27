@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
 import MatchInformation.Match;
@@ -98,18 +99,14 @@ public class ListenController {
 				String event = tokenizer.nextToken();
 				String matchType = tokenizer.nextToken();
 				
-				/**
-				 * Jahr ist irgendwie immer mit 1900 initialisiert und wird komischerweise immer zur Eingabe hinzuaddiert.
-				 * Deshalb 1900 subtrahieren.
-				 */
-				jahr = "" + (Integer.parseInt(jahr) - 1900);
 				
 				/**
 				 * Date Objekt anlegen, ist zwar deprecated aber funktioniert noch super.
 				 */
-				@SuppressWarnings("deprecation")
-				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
-				
+				//@SuppressWarnings("deprecation")
+				//Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
+				GregorianCalendar date = new GregorianCalendar(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag)
+						, Integer.parseInt(stunde), Integer.parseInt(minute));
 				/**
 				 * Match Objekt mit entsprechenden Informationen anlegen.
 				 */
@@ -181,18 +178,14 @@ public class ListenController {
 				String event = tokenizer.nextToken();
 				//String matchType = tokenizer.nextToken();
 				
-				/**
-				 * Jahr ist irgendwie immer mit 1900 initialisiert und wird komischerweise immer zur Eingabe hinzuaddiert.
-				 * Deshalb 1900 subtrahieren.
-				 */
-				jahr = "" + (Integer.parseInt(jahr) - 1900);
 				
 				/**
 				 * Date Objekt anlegen, ist zwar deprecated aber funktioniert noch super.
 				 */
-				@SuppressWarnings("deprecation")
-				Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
-				
+				//@SuppressWarnings("deprecation")
+				//Date date = new Date(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag), Integer.parseInt(stunde), Integer.parseInt(minute), 0);
+				GregorianCalendar date = new GregorianCalendar(Integer.parseInt(jahr), Integer.parseInt(monat)-1, Integer.parseInt(tag)
+						, Integer.parseInt(stunde), Integer.parseInt(minute));
 				/**
 				 * Match Objekt mit entsprechenden Informationen anlegen.
 				 */
