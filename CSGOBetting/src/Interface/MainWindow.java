@@ -258,6 +258,9 @@ public class MainWindow {
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
+				/**
+				 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
+				 */
 				String currentItem = (String) comboBox.getSelectedItem();
 				switch (currentItem) {
 				case "CSGL + EGB":
@@ -292,6 +295,9 @@ public class MainWindow {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"CSGL + EGB", "CSGL", "EGB"}));
 		frmCsgoBettingCalculator.getContentPane().add(comboBox, "cell 2 0 2 1,alignx left");
 		
+		/**
+		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
+		 */
 		String currentItem = (String) comboBox.getSelectedItem();
 		switch (currentItem) {
 		case "CSGL + EGB":
@@ -458,6 +464,9 @@ public class MainWindow {
 		    
 		}
 		
+		/**
+		 * Falls nichts eingegeben wurde, soll die normale Liste angezeigt werden, welche in der comboBox ausgewaehlt wurde
+		 */
 		if(text.equals("") || text == null || text.equals("Suche...")){
 			
 			String currentItem = (String) comboBox.getSelectedItem();
@@ -512,6 +521,9 @@ public class MainWindow {
 		updateTable();
 	}
 
+	/**
+	 * Updated unsere Tabelle, nachdem wir eine Suchanfrage gestartet haben oder die anzuzeigende Liste veraendern
+	 */
 	@SuppressWarnings("serial")
 	private void updateTable() {
 		table.setModel(new DefaultTableModel(
@@ -649,7 +661,7 @@ public class MainWindow {
 		double team2Odds = team2 / (team1 + team2) *100;
 		
 		/**
-		 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
+		 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommastellen einfach
 		 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
 		 */
 		team1Odds = Math.round(team1Odds * 100) / 100.0;
@@ -661,6 +673,9 @@ public class MainWindow {
 		lblEgb.setText("EGB: ");
 		lblEgb_1.setText("EGB: ");
 		
+		/**
+		 * Wird nur aufgerufen, wenn das aktuelle Match ein relatiertes EGB Match hat
+		 */
 		if(match.getRelatedEGBMatch() != null){
 			
 			double team1EGB = Double.parseDouble(match.getRelatedEGBMatch().getTeam1Odds());
@@ -673,7 +688,7 @@ public class MainWindow {
 			double team2OddsEGB = team1EGB / (team1EGB + team2EGB) *100;
 			
 			/**
-			 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
+			 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommastellen einfach
 			 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
 			 */
 			team1OddsEGB = Math.round(team1OddsEGB * 100) / 100.0;

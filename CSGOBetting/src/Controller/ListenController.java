@@ -218,6 +218,11 @@ public class ListenController {
 		
 	}
 	
+	/**
+	 * Erstellt die Liste von Matches, welche sowohl auf Lounge wie auch auf EGB vorkommen
+	 * @return Liste von Matches, welche sowohl auf Lounge wie auch auf EGB vorkommen
+	 * @throws IOException
+	 */
 	public ArrayList<Match> getBothMatches() throws IOException {
 
 		//TODO Liste von CSGL Matches, welche auch in der EGB Liste drin sind. Hierfuer LinkedListOpen benutzen.
@@ -271,16 +276,16 @@ public class ListenController {
 	 * main zum testen / debuggen
 	 * @return
 	 */
-	public static void main(String[] args) throws IOException{
-		ListenController lctrl = new ListenController();
-		ArrayList<Match> liste = lctrl.getLoungeMatches();
-		
-		System.out.println("" + liste.size());
-		liste = lctrl.getEGBMatches();
-		System.out.println("" + liste.size());
-		liste = lctrl.getBothMatches();
-		System.out.println("" + liste.size());
-	}
+//	public static void main(String[] args) throws IOException{
+//		ListenController lctrl = new ListenController();
+//		ArrayList<Match> liste = lctrl.getLoungeMatches();
+//		
+//		System.out.println("" + liste.size());
+//		liste = lctrl.getEGBMatches();
+//		System.out.println("" + liste.size());
+//		liste = lctrl.getBothMatches();
+//		System.out.println("" + liste.size());
+//	}
 	
 	
 	/**
