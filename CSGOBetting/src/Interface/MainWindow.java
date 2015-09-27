@@ -702,6 +702,16 @@ public class MainWindow {
 		lblEgb.setText("EGB: ");
 		lblEgb_1.setText("EGB: ");
 		
+		String item = (String) comboBox.getSelectedItem();
+		if(item.equals("EGB")){
+			
+			lblCsgl.setText("CSGL: " );
+			lblCsgl_1.setText("CSGL: ");
+			
+			lblEgb.setText("EGB: " + team2Odds + "%");
+			lblEgb_1.setText("EGB: " + team1Odds + "%");
+		}
+		
 		/**
 		 * Wird nur aufgerufen, wenn das aktuelle Match ein relatiertes EGB Match hat
 		 */
@@ -736,7 +746,10 @@ public class MainWindow {
 			
 			lblEgb.setText("EGB: " + team1OddsEGB + "%");
 			lblEgb_1.setText("EGB: " + team2OddsEGB + "%");
+			
 		}
+		
+
 		
 	}
 	
