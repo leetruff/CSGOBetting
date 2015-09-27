@@ -9,9 +9,7 @@ public class DateComparator implements Comparator<String>{
 	
 	@Override
     public int compare(String a, String b) {
-		
 		try{
-			System.out.println("Datum 1: "+a+"  Datum 2: "+ b + "  Milli 1: "+ sdf.parse(a).getTime() + "  Milli 2: "+ sdf.parse(b).getTime());
 			long a_new = sdf.parse(a).getTime();
 			long b_new = sdf.parse(b).getTime();
 			return a_new < b_new ? -1 : a_new == b_new ? 0 : 1;

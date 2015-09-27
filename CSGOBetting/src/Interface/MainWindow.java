@@ -616,6 +616,7 @@ public class MainWindow {
     		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
     		sorter.setComparator(2, new DoubleComparator());
     		sorter.setComparator(3, new DoubleComparator());
+    		sorter.setComparator(7, new DateComparator());
     		table.setRowSorter(sorter);
             
             
