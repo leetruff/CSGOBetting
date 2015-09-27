@@ -127,7 +127,7 @@ public class MainWindow {
 		/**
 		 * Scrollpane fuer unsere Tabelle
 		 */
-		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[83.00px][88.00][-18.00][318.00px][151px][61.00px][127.00px][422px]", "[63px][824.00px]"));
+		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[83.00px][88.00][-18.00][318.00px][151px][61.00px][127.00px][468.00px]", "[63px][824.00px]"));
 		
 		btnDevtools = new JButton("DevTools");
 		btnDevtools.addActionListener(new ActionListener() {
@@ -274,11 +274,23 @@ public class MainWindow {
 					updateTable();
 					break;
 					
+				case "CSGL + EGB Archive":
+					try {
+						aktuelleList = listCtrl.getBothMatchesArchive();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					listCtrl.setAktuelleList(aktuelleList);
+					updateTable();
+					break;
+					
 				case "CSGL":
 					aktuelleList = listCtrl.getLoungeMatches();
 					listCtrl.setAktuelleList(aktuelleList);
 					updateTable();
 					break;
+					
 					
 				case "EGB":
 					aktuelleList = listCtrl.getEGBMatches();
@@ -292,7 +304,7 @@ public class MainWindow {
 				
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"CSGL + EGB", "CSGL", "EGB"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"CSGL + EGB", "CSGL + EGB Archive", "CSGL", "EGB"}));
 		frmCsgoBettingCalculator.getContentPane().add(comboBox, "cell 2 0 2 1,alignx left");
 		
 		/**
@@ -302,6 +314,12 @@ public class MainWindow {
 		switch (currentItem) {
 		case "CSGL + EGB":
 			aktuelleList = listCtrl.getBothMatches();
+			listCtrl.setAktuelleList(aktuelleList);
+			updateTable();
+			break;
+			
+		case "CSGL + EGB Archive":
+			aktuelleList = listCtrl.getBothMatchesArchive();
 			listCtrl.setAktuelleList(aktuelleList);
 			updateTable();
 			break;
@@ -474,6 +492,17 @@ public class MainWindow {
 			case "CSGL + EGB":
 				try {
 					aktuelleList = listCtrl.getBothMatches();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				listCtrl.setAktuelleList(aktuelleList);
+				updateTable();
+				break;
+				
+			case "CSGL + EGB Archive":
+				try {
+					aktuelleList = listCtrl.getBothMatchesArchive();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -684,8 +713,19 @@ public class MainWindow {
 			/**
 			 * Odds als prozentuale Werte berechnen
 			 */
-			double team1OddsEGB = team2EGB / (team1EGB + team2EGB) *100;
-			double team2OddsEGB = team1EGB / (team1EGB + team2EGB) *100;
+
+			double team1OddsEGB;
+			double team2OddsEGB;
+			
+			if(match.getRelatedEGBMatch().isSwitched){
+				team1OddsEGB = team1EGB / (team1EGB + team2EGB) *100;
+				team2OddsEGB = team2EGB / (team1EGB + team2EGB) *100;
+			}
+			
+			else{
+				team1OddsEGB = team2EGB / (team1EGB + team2EGB) *100;
+				team2OddsEGB = team1EGB / (team1EGB + team2EGB) *100;
+			}
 			
 			/**
 			 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommastellen einfach

@@ -29,6 +29,7 @@ public class ListenController {
 	ArrayList<Match> loungeMatchList;
 	ArrayList<Match> egbMatchList;
 	ArrayList<Match> bothMatchList;
+	ArrayList<Match> bothMatchArchiveList;
 	ArrayList<Match> aktuelleList;
 	
 	
@@ -48,6 +49,7 @@ public class ListenController {
 		loungeMatchList = new ArrayList<Match>();
 		egbMatchList = new ArrayList<Match>();
 		bothMatchList = new ArrayList<Match>();
+		bothMatchArchiveList = new ArrayList<Match>();
 		
 		readLoungeDataFromFile();
 		readEGBDataFromFile();
@@ -274,6 +276,60 @@ public class ListenController {
 		
 		bothMatchList = tempList;
 		return bothMatchList;
+	}
+	
+	public ArrayList<Match> getBothMatchesArchive() throws IOException {
+
+		//TODO Liste von CSGL Matches, welche auch in der EGB Liste drin sind. Hierfuer LinkedListOpen benutzen.
+		File file = new File("C:"+File.separator+"csgobetting"+File.separator+"linklistclosed.txt");
+		@SuppressWarnings("resource")
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		
+		ArrayList<Match> tempList = new ArrayList<Match>();
+		ArrayList<Match> loungeMatches = getLoungeMatches();
+		ArrayList<Match> egbMatches = getEGBMatches();
+		
+		StringTokenizer tokenizer;
+		String line;
+		
+		while(((line = reader.readLine()) != null) && line.contains(";")){
+			
+			tokenizer = new StringTokenizer(line, ";");
+			
+			String loungeID = tokenizer.nextToken();
+			String egbID = tokenizer.nextToken();
+			String switchedTeams = tokenizer.nextToken();
+			
+			
+			Match loungeMatch = null;
+			Match egbMatch = null;
+			
+			for(int i = loungeMatches.size()-1; i >= 0; i--){
+				if(loungeMatches.get(i).getID().equals(loungeID)){
+					loungeMatch = loungeMatches.get(i);
+					break;
+				}
+			}
+			
+			for(int i = egbMatches.size()-1; i >= 0; i--){
+				if(egbMatches.get(i).getID().equals(egbID)){
+					egbMatch = egbMatches.get(i);
+					break;
+				}
+			}
+			
+			if(Integer.parseInt(switchedTeams) == 1){
+				egbMatch.setSwitched(true);
+			}
+			
+			if(loungeMatch != null && egbMatch != null){
+				loungeMatch.setRelatedEGBMatch(egbMatch);
+				tempList.add(loungeMatch);
+			}
+		}
+		
+		bothMatchArchiveList = tempList;
+		return bothMatchArchiveList;
 	}
 	
 	/**
