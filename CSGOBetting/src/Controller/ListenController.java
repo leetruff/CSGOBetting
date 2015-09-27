@@ -251,27 +251,29 @@ public class ListenController {
 			Match loungeMatch = null;
 			Match egbMatch = null;
 			
-			for(int i = loungeMatches.size()-1; i > loungeMatches.size()-50; i--){
+			for(int i = loungeMatches.size()-1; i > loungeMatches.size()-100; i--){
 				if(loungeMatches.get(i).getID().equals(loungeID)){
 					loungeMatch = loungeMatches.get(i);
 					break;
 				}
 			}
 			
-			for(int i = egbMatches.size()-1; i > egbMatches.size()-50; i--){
+			for(int i = egbMatches.size()-1; i > egbMatches.size()-100; i--){
 				if(egbMatches.get(i).getID().equals(egbID)){
 					egbMatch = egbMatches.get(i);
 					break;
 				}
 			}
 			
+			
 			if(Integer.parseInt(switchedTeams) == 1){
 				egbMatch.setSwitched(true);
 			}
-			
+		
+		
 			loungeMatch.setRelatedEGBMatch(egbMatch);
 			tempList.add(loungeMatch);
-			
+		
 		}
 		
 		bothMatchList = tempList;
@@ -318,14 +320,15 @@ public class ListenController {
 				}
 			}
 			
+			
 			if(Integer.parseInt(switchedTeams) == 1){
 				egbMatch.setSwitched(true);
 			}
 			
-			if(loungeMatch != null && egbMatch != null){
-				loungeMatch.setRelatedEGBMatch(egbMatch);
-				tempList.add(loungeMatch);
-			}
+			System.out.println("lounge: " + loungeID + " EGB: " + egbID);
+			loungeMatch.setRelatedEGBMatch(egbMatch);
+			tempList.add(loungeMatch);
+		
 		}
 		
 		bothMatchArchiveList = tempList;
