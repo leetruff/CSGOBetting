@@ -323,16 +323,16 @@ public class MainWindow {
 		 */
 		for(int i = aktuelleList.size()-1; i >= 0; i--){
 			
-			if(!(Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0 || Integer.parseInt(aktuelleList.get(i).getTeam1LoungeOdds()) == 0)){
-				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
-				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
+			if(!(Integer.parseInt(aktuelleList.get(i).getTeam1Odds()) == 0 || Integer.parseInt(aktuelleList.get(i).getTeam1Odds()) == 0)){
+				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1Odds());
+				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2Odds());
 				
 				double team1Odds;
 				double team2Odds;
 				/**
 				 * Odds als prozentuale Werte berechnen
 				 */
-				if(!aktuelleList.get(i).getTeam1LoungeOdds().contains(".")){
+				if(!aktuelleList.get(i).getTeam1Odds().contains(".")){
 					team1Odds = team1 / (team1 + team2) *100;
 					team2Odds = team2 / (team1 + team2) *100;
 				}
@@ -381,33 +381,30 @@ public class MainWindow {
 		/**
 		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
 		 */
-		panel.setLayout(new MigLayout("", "[117px][3px][55px][][48px][20px][4px][129px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][][][][][][][][][][][][][][][][][]"));
+		panel.setLayout(new MigLayout("", "[117px][][3px][55px][][48px][20px][4px][129px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][385.00]"));
 		JButton btnUpdateThis = new JButton("Update this");
-		panel.add(btnUpdateThis, "cell 7 0,alignx right,aligny top");
+		panel.add(btnUpdateThis, "cell 8 0,alignx right,aligny top");
 		
 		lblTeam = new JLabel("Team 1");
-		panel.add(lblTeam, "cell 0 1,growx,aligny top");
-		
-		lblVs = new JLabel("vs.");
-		panel.add(lblVs, "cell 3 1,alignx center,aligny top");
+		panel.add(lblTeam, "flowx,cell 0 1,growx,aligny top");
 		
 		lblTeam_1 = new JLabel("Team 2");
-		panel.add(lblTeam_1, "cell 7 1,growx,aligny top");
+		panel.add(lblTeam_1, "cell 8 1,growx,aligny top");
 		
 		lblCsgl = new JLabel("CSGL:");
 		panel.add(lblCsgl, "cell 0 3,growx,aligny top");
 		
 		lblCsgl_1 = new JLabel("CSGL:");
-		panel.add(lblCsgl_1, "cell 7 3,growx,aligny top");
+		panel.add(lblCsgl_1, "cell 8 3,growx,aligny top");
 		
 		lblEgb = new JLabel("EGB:");
 		panel.add(lblEgb, "cell 0 5,growx,aligny top");
 		
 		lblEgb_1 = new JLabel("EGB:");
-		panel.add(lblEgb_1, "cell 7 5,growx,aligny top");
+		panel.add(lblEgb_1, "cell 8 5,growx,aligny top");
 		
 		lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
-		panel.add(lblTimeLeftTill, "cell 0 7 4 1,growx,aligny top");
+		panel.add(lblTimeLeftTill, "cell 0 7 5 1,growx,aligny top");
 		
 		JButton btnOpenInBrowser = new JButton("Open in Browser");
 		btnOpenInBrowser.addActionListener(new ActionListener() {
@@ -419,7 +416,10 @@ public class MainWindow {
 		lblRecommendedBet = new JLabel("Recommended bet:\r\n");
 		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
 		panel.add(lblRecommendedBet, "cell 0 10,growx,aligny center");
-		panel.add(btnOpenInBrowser, "cell 7 27,growx,aligny bottom");
+		panel.add(btnOpenInBrowser, "cell 8 11,growx,aligny bottom");
+		
+		lblVs = new JLabel("vs.");
+		panel.add(lblVs, "cell 0 1,alignx center,aligny top");
 		
 		
 		/**
@@ -583,16 +583,16 @@ public class MainWindow {
     		 */
     		for(int i = aktuelleList.size()-1; i >= 0; i--){
     			
-    			if(!(aktuelleList.get(i).getTeam1LoungeOdds().startsWith("0") || aktuelleList.get(i).getTeam2LoungeOdds().startsWith("0"))){
-    				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1LoungeOdds());
-    				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2LoungeOdds());
+    			if(!(aktuelleList.get(i).getTeam1Odds().startsWith("0") || aktuelleList.get(i).getTeam2Odds().startsWith("0"))){
+    				double team1 = Double.parseDouble(aktuelleList.get(i).getTeam1Odds());
+    				double team2 = Double.parseDouble(aktuelleList.get(i).getTeam2Odds());
     				
     				double team1Odds;
     				double team2Odds;
     				/**
     				 * Odds als prozentuale Werte berechnen
     				 */
-    				if(!aktuelleList.get(i).getTeam1LoungeOdds().contains(".")){
+    				if(!aktuelleList.get(i).getTeam1Odds().contains(".")){
     					team1Odds = team1 / (team1 + team2) *100;
     					team2Odds = team2 / (team1 + team2) *100;
     				}
@@ -639,8 +639,8 @@ public class MainWindow {
 		lblTeam.setText(match.getTeam1Name());
 		lblTeam_1.setText(match.getTeam2Name());
 		
-		double team1 = Double.parseDouble(match.getTeam1LoungeOdds());
-		double team2 = Double.parseDouble(match.getTeam2LoungeOdds());
+		double team1 = Double.parseDouble(match.getTeam1Odds());
+		double team2 = Double.parseDouble(match.getTeam2Odds());
 		
 		/**
 		 * Odds als prozentuale Werte berechnen
@@ -657,6 +657,31 @@ public class MainWindow {
 		
 		lblCsgl.setText("CSGL: " + team1Odds + "%");
 		lblCsgl_1.setText("CSGL: " + team2Odds + "%");
+		
+		lblEgb.setText("EGB: ");
+		lblEgb_1.setText("EGB: ");
+		
+		if(match.getRelatedEGBMatch() != null){
+			
+			double team1EGB = Double.parseDouble(match.getRelatedEGBMatch().getTeam1Odds());
+			double team2EGB = Double.parseDouble(match.getRelatedEGBMatch().getTeam2Odds());
+			
+			/**
+			 * Odds als prozentuale Werte berechnen
+			 */
+			double team1OddsEGB = team2EGB / (team1EGB + team2EGB) *100;
+			double team2OddsEGB = team1EGB / (team1EGB + team2EGB) *100;
+			
+			/**
+			 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommestellen einfach
+			 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
+			 */
+			team1OddsEGB = Math.round(team1OddsEGB * 100) / 100.0;
+			team2OddsEGB = Math.round(team2OddsEGB * 100) / 100.0;
+			
+			lblEgb.setText("EGB: " + team1OddsEGB + "%");
+			lblEgb_1.setText("EGB: " + team2OddsEGB + "%");
+		}
 		
 	}
 	

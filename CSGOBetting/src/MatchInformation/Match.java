@@ -71,11 +71,11 @@ public class Match {
 		return datum;
 	}
 	
-	public String getTeam1LoungeOdds() {
+	public String getTeam1Odds() {
 		return team1LoungeOdds;
 	}
 	
-	public String getTeam2LoungeOdds() {
+	public String getTeam2Odds() {
 		return team2LoungeOdds;
 	}
 	
@@ -89,6 +89,10 @@ public class Match {
 	
 	public void setRelatedEGBMatch(Match relMatch){
 		relatedEGBMatch = relMatch;
+	}
+	
+	public Match getRelatedEGBMatch(){
+		return relatedEGBMatch;
 	}
 
 
