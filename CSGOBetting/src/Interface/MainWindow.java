@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +32,7 @@ import Comparators.DateComparator;
 import Comparators.DoubleComparator;
 import Controller.ListenController;
 import MatchInformation.Match;
+import MatchInformation.Matchtyp;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
 
@@ -73,6 +75,7 @@ public class MainWindow {
 	private JButton btnNewButton;
 	private JButton btnDevtools;
 	private JComboBox comboBox;
+	private JButton btnOpenEgb;
 
 
 	/**
@@ -410,42 +413,70 @@ public class MainWindow {
 		/**
 		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
 		 */
-		panel.setLayout(new MigLayout("", "[117px][][3px][55px][][48px][20px][4px][129px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][385.00]"));
+		panel.setLayout(new MigLayout("", "[182.00px][304.00px][290.00px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][451.00]"));
 		JButton btnUpdateThis = new JButton("Update this");
-		panel.add(btnUpdateThis, "cell 8 0,alignx right,aligny top");
+		panel.add(btnUpdateThis, "cell 2 0,alignx right,aligny top");
 		
 		lblTeam = new JLabel("Team 1");
 		panel.add(lblTeam, "flowx,cell 0 1,growx,aligny top");
 		
 		lblTeam_1 = new JLabel("Team 2");
-		panel.add(lblTeam_1, "cell 8 1,growx,aligny top");
+		panel.add(lblTeam_1, "cell 2 1,growx,aligny top");
 		
 		lblCsgl = new JLabel("CSGL:");
 		panel.add(lblCsgl, "cell 0 3,growx,aligny top");
 		
 		lblCsgl_1 = new JLabel("CSGL:");
-		panel.add(lblCsgl_1, "cell 8 3,growx,aligny top");
+		panel.add(lblCsgl_1, "cell 2 3,growx,aligny top");
 		
 		lblEgb = new JLabel("EGB:");
 		panel.add(lblEgb, "cell 0 5,growx,aligny top");
 		
 		lblEgb_1 = new JLabel("EGB:");
-		panel.add(lblEgb_1, "cell 8 5,growx,aligny top");
+		panel.add(lblEgb_1, "cell 2 5,growx,aligny top");
 		
 		lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
-		panel.add(lblTimeLeftTill, "cell 0 7 5 1,growx,aligny top");
+		panel.add(lblTimeLeftTill, "cell 0 7,growx,aligny top");
 		
-		JButton btnOpenInBrowser = new JButton("Open in Browser");
+		JButton btnOpenInBrowser = new JButton("Open CSGL\r\n");
 		btnOpenInBrowser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getID());
+				if(getMarkedMatchup().getMatchtyp().equals(Matchtyp.CSGOLounge))
+					openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getID());
+				
+				else if(getMarkedMatchup().getRelatedCSGLMatch() != null && getMarkedMatchup().getRelatedCSGLMatch().getMatchtyp().equals(Matchtyp.CSGOLounge))
+					openWebPage("http://csgolounge.com/match?m=" + getMarkedMatchup().getRelatedCSGLMatch().getID());
+				
+				else{
+					int dialogButton = JOptionPane.ERROR_MESSAGE;
+					JOptionPane.showMessageDialog(null, "Es wurde keine CSGL MatchID gefunden. Wahrscheinlich gibt es "
+							+ "dieses Match nicht auf CSGL.", "Match nicht gefunden!", dialogButton);
+				}
 			}
 		});
 		
 		lblRecommendedBet = new JLabel("Recommended bet:\r\n");
-		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 22));
+		lblRecommendedBet.setFont(new Font("SansSerif", Font.BOLD, 17));
 		panel.add(lblRecommendedBet, "cell 0 10,growx,aligny center");
-		panel.add(btnOpenInBrowser, "cell 8 11,growx,aligny bottom");
+		
+		btnOpenEgb = new JButton("Open EGB  ");
+		btnOpenEgb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(getMarkedMatchup().getMatchtyp().equals(Matchtyp.EGB))
+					openWebPage("http://egamingbets.com/tables#" + getMarkedMatchup().getID());
+				
+				else if(getMarkedMatchup().getRelatedEGBMatch() != null && getMarkedMatchup().getRelatedEGBMatch().getMatchtyp().equals(Matchtyp.EGB))
+					openWebPage("http://egamingbets.com/tables#" + getMarkedMatchup().getRelatedEGBMatch().getID());
+				
+				else{
+					int dialogButton = JOptionPane.ERROR_MESSAGE;
+					JOptionPane.showMessageDialog(null, "Es wurde keine EGB MatchID gefunden. Wahrscheinlich gibt es "
+							+ "dieses Match nicht auf EGB.", "Match nicht gefunden!", dialogButton);
+				}
+			}
+		});
+		panel.add(btnOpenEgb, "cell 0 11,alignx left,aligny bottom");
+		panel.add(btnOpenInBrowser, "cell 2 11,alignx right,aligny bottom");
 		
 		lblVs = new JLabel("vs.");
 		panel.add(lblVs, "cell 0 1,alignx center,aligny top");

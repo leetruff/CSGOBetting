@@ -23,7 +23,9 @@ public class Match {
 	String team2EGBOdds;
 	int winner;
 	Match relatedEGBMatch;
+	Match relatedCSGLMatch;
 	public boolean isSwitched;
+	Matchtyp typ;
 	
 	/**
 	 * Konstruktor fuer ein {@link Match}, welcher die Matchspezifischen Eigenschaften setzt
@@ -96,6 +98,14 @@ public class Match {
 	public Match getRelatedEGBMatch(){
 		return relatedEGBMatch;
 	}
+	
+	public void setRelatedCSGLMatch(Match relMatch){
+		relatedCSGLMatch = relMatch;
+	}
+	
+	public Match getRelatedCSGLMatch(){
+		return relatedCSGLMatch;
+	}
 
 	public void setSwitched(boolean switched){
 		isSwitched = switched;
@@ -158,6 +168,14 @@ public class Match {
 
 	public int getWinner() {
 		return winner;
+	}
+	
+	public void setMatchtyp(Matchtyp typ){
+		this.typ = typ;
+	}
+	
+	public Matchtyp getMatchtyp(){
+		return typ;
 	}
 
 

@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
 import MatchInformation.Match;
+import MatchInformation.Matchtyp;
 
 
 
@@ -113,6 +114,7 @@ public class ListenController {
 				Match match = new Match(matchID, team1, team2, event, Integer.parseInt(matchType), date, team1Odds, team2Odds);
 				
 				match.setWinner(Integer.parseInt(winner));
+				match.setMatchtyp(Matchtyp.CSGOLounge);
 				
 				/**
 				 * Hinzufuegen des Matches in unsere Archivliste, falls es keine 0er Odds enthaelt.
@@ -192,6 +194,7 @@ public class ListenController {
 				Match match = new Match(matchID, team1, team2, event, 0, date, team1Odds, team2Odds);
 				
 				match.setWinner(Integer.parseInt(winner));
+				match.setMatchtyp(Matchtyp.EGB);
 				
 				/**
 				 * Hinzufuegen des Matches in unsere Archivliste, falls es keine 0er Odds enthaelt.
@@ -266,6 +269,7 @@ public class ListenController {
 
 
 				loungeMatch.setRelatedEGBMatch(egbMatch);
+				egbMatch.setRelatedCSGLMatch(loungeMatch);
 				tempList.add(loungeMatch);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -327,6 +331,7 @@ public class ListenController {
 				}
 				
 				loungeMatch.setRelatedEGBMatch(egbMatch);
+				egbMatch.setRelatedCSGLMatch(loungeMatch);
 				tempList.add(loungeMatch);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
