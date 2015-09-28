@@ -32,6 +32,7 @@ import Comparators.DateComparator;
 import Comparators.DoubleComparator;
 import Controller.ListenController;
 import MatchInformation.Match;
+import MatchInformation.MatchInformation;
 import MatchInformation.Matchtyp;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
@@ -50,8 +51,6 @@ public class MainWindow {
 	private JFrame frmCsgoBettingCalculator;
 	private JTable table;
 	private JTextField txtSuche;
-	private ArrayList<Match> loungeMatchList;
-	private ArrayList<Match> suchList;
 	private ArrayList<Match> aktuelleList;
 
 	private JLabel lblTeam;
@@ -178,7 +177,12 @@ public class MainWindow {
 		btnNewButton = new JButton("go!");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createSuchList(txtSuche.getText());
+				try {
+					createSuchList(txtSuche.getText());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				//table.repaint();
 			}
 
@@ -259,7 +263,6 @@ public class MainWindow {
 		/**
 		 * Liste von <Matches> aus dem ListenController beziehen
 		 */
-		loungeMatchList = listCtrl.getLoungeMatches();
 		aktuelleList = listCtrl.getBothMatches();
 		
 		comboBox = new JComboBox();
@@ -279,7 +282,12 @@ public class MainWindow {
 						e.printStackTrace();
 					}
 					listCtrl.setAktuelleList(aktuelleList);
-					updateTable();
+					try {
+						updateTable();
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 					break;
 					
 				case "CSGL + EGB Archive":
@@ -290,20 +298,35 @@ public class MainWindow {
 						e.printStackTrace();
 					}
 					listCtrl.setAktuelleList(aktuelleList);
-					updateTable();
+					try {
+						updateTable();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					break;
 					
 				case "CSGL":
 					aktuelleList = listCtrl.getLoungeMatches();
 					listCtrl.setAktuelleList(aktuelleList);
-					updateTable();
+					try {
+						updateTable();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 					
 					
 				case "EGB":
 					aktuelleList = listCtrl.getEGBMatches();
 					listCtrl.setAktuelleList(aktuelleList);
-					updateTable();
+					try {
+						updateTable();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 
 				default:
@@ -397,8 +420,27 @@ public class MainWindow {
 		JButton btnUpdateAll = new JButton("Update All");
 		btnUpdateAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO Gesamte Liste updaten, wir sollten dazu die Launcher.java nicht als static main benutzen,
-				//sondern uns Objekte davon erzeugen.
+				MatchInformation Info = new MatchInformation();
+				Info.createLoungeFile();
+				Info.createEGBFile();
+				Info.createClosedBetLinkList();
+				Info.createOpenBetLinkList();
+				Info = null;
+				
+				try {
+					listCtrl = new ListenController();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				try {
+					updateTable();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}
 		});
 		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll, "cell 0 0,growx,aligny center");
@@ -505,8 +547,9 @@ public class MainWindow {
 	/**
 	 * Erstellt die Suchliste
 	 * @param text Suchbegriffe
+	 * @throws IOException 
 	 */
-	protected void createSuchList(String text) {
+	protected void createSuchList(String text) throws IOException {
 		
 
 		int count = 0;
@@ -588,9 +631,10 @@ public class MainWindow {
 
 	/**
 	 * Updated unsere Tabelle, nachdem wir eine Suchanfrage gestartet haben oder die anzuzeigende Liste veraendern
+	 * @throws IOException 
 	 */
 	@SuppressWarnings("serial")
-	private void updateTable() {
+	private void updateTable() throws IOException {
 		table.setModel(new DefaultTableModel(
 				new Object[][] {},
 				new String[] {
@@ -654,6 +698,39 @@ public class MainWindow {
             
         	
         	DefaultTableModel model = (DefaultTableModel) table.getModel();
+        	
+        	
+        	/**
+    		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
+    		 */
+    		String currentItem = (String) comboBox.getSelectedItem();
+    		switch (currentItem) {
+    		case "CSGL + EGB":
+    			aktuelleList = listCtrl.getBothMatches();
+    			listCtrl.setAktuelleList(aktuelleList);
+    			break;
+    			
+    		case "CSGL + EGB Archive":
+    			aktuelleList = listCtrl.getBothMatchesArchive();
+    			listCtrl.setAktuelleList(aktuelleList);
+    			break;
+    			
+    		case "CSGL":
+    			aktuelleList = listCtrl.getLoungeMatches();
+    			listCtrl.setAktuelleList(aktuelleList);
+    			break;
+    			
+    		case "EGB":
+    			aktuelleList = listCtrl.getEGBMatches();
+    			listCtrl.setAktuelleList(aktuelleList);
+    			break;
+
+    		default:
+    			break;
+    		}
+        	
+        	
+        	
         	
     		/**
     		 * Tabelle mit den Eintraegen aus der Match Liste befuellen. Matches, welche Odds von 0 enthalten werden nicht
