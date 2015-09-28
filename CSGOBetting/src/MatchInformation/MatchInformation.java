@@ -37,12 +37,15 @@ public class MatchInformation {
 		try {
 			url = new URL("http://csgolounge.com/api/matches");
 			s = new Scanner(url.openStream());
+			if(s != null){
+				matchString = s.nextLine();
+			}
+			s.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(s != null){
-			matchString = s.nextLine();
+			//e.printStackTrace();
+			System.out.println("Höchstwahrscheinlich Timeout bei Serveranfrage, stackTrace printen lassen");
+			return;
 		}
 		
 		//matchArray enth�lt den nicht formattierten Info String zu jedem Match
@@ -52,12 +55,16 @@ public class MatchInformation {
 		try {
 			url = new URL("http://csgolounge.com/api/matches_stats");
 			s = new Scanner(url.openStream());
+			if(s != null){
+				matchString = s.nextLine();
+			}
+			s.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(s != null){
-			matchString = s.nextLine();
+			//e.printStackTrace();
+			System.out.println("Höchstwahrscheinlich Timeout bei Serveranfrage, stackTrace printen lassen");
+			s.close();
+			return;
 		}
 		
 		//matchArray2 enth�lt zu jedem Match die Odds, Ids stimmen mit matchArray �berein
@@ -79,65 +86,119 @@ public class MatchInformation {
 			e.printStackTrace();
 		}
 		
-		//erstellen eines PrintWriters im append=true modus um neue Games ins file einzutragen
-		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
-			//updateStartingId wird daf�r benutzt, nicht jeden eintrag aktualisieren zu m�ssen, sondern nur neue matches
-			int updateStartingId = 1;
-			int lastUnclosedMatch = 1;
-			
-			//falls das File erst angelegt wurde, Kopfzeile einf�gen, ansonsten checken ab wann aktualisiert werden muss
-			if(!fileExists){
+		//updateStartingId wird daf�r benutzt, nicht jeden eintrag aktualisieren zu m�ssen, sondern nur neue matches
+		int updateStartingId = 1;
+		int lastUnclosedMatch = 1;
+		
+		long timer = System.currentTimeMillis();
+		
+		//falls das File erst angelegt wurde, Kopfzeile einf�gen, ansonsten checken ab wann aktualisiert werden muss
+		if(!fileExists){
+			try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
 				out.println("ID;Y;M;D;H;M;Team1;T1Odds;Team2;T2Odds;Winner;Closed;Event;Format;");
-				for(int i=1; i<matchArray.length; i++){
-					//suche erstes nicht geschlossenes match, ab da soll aktualisiert werden
-					if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
-						lastUnclosedMatch = i;
-						System.out.println(matchArray[i]);
+			}catch(Exception e){
+				e.printStackTrace();
+				System.out.println("Schreiben von CSGOLounge Data fehlgeschlagen");
+			}
+			/*for(int i=1; i<matchArray.length; i++){
+				//suche erstes nicht geschlossenes match, ab da soll aktualisiert werden
+				if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
+					lastUnclosedMatch = i;
+					//System.out.println(matchArray[i]);
+					break;
+				}
+			}*/
+		}else{
+			try{
+				File loungeFile = new File("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt");
+				FileReader fReader = new FileReader(loungeFile);
+				BufferedReader bReader = new BufferedReader(fReader);
+				FileWriter fWriter = new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeDataNew.txt", true);
+				BufferedWriter bWriter = new BufferedWriter(fWriter);
+				PrintWriter out = new PrintWriter(bWriter);
+				//Schreibe erste Zeile die nur Kopfdaten enthält manuell
+				String lineT = bReader.readLine();
+				out.println(lineT);
+				for(String line; (line = bReader.readLine()) != null; ) {
+					if(line.split(";")[11].equals("0")){
+						lastUnclosedMatch = Integer.parseInt(line.split(";")[0]);
 						break;
 					}
+					out.println(line);
 				}
-			}else{
-				//check for new matches
-				RandomAccessFile newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
-				long length = newFile.length() - 1;
-				byte b;
+				out.close();
+				bWriter.close();
+				fWriter.close();
+				bReader.close();
+				fReader.close();
+				loungeFile = null;
+			}catch(Exception e){
+				System.out.println("Bei der aktualisierung von CSGOloungefile ist etwas passiert");
+				e.printStackTrace();
+			}
+			//TempFile zum Main File machen und main file löschen
+			File loungeFile = new File("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt");
+			File tempFile = new File("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeDataNew.txt");
+			if(loungeFile.exists()){
+				System.gc();
+				System.out.println("LoungeData (alte datei) löschen erfolgreich: "+loungeFile.delete());
+			}
+			System.out.println("LoungeDataNew in LoungeData umbenennen erfolgreich: " + tempFile.renameTo(loungeFile));
+			
+			for(int i=1; i<matchArray.length; i++){
+				//suche erstes nicht geschlossenes match
+				if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
+					updateStartingId = i;
+					break;
+				}
+			}
+			
+			//check for new matches
+			/*RandomAccessFile newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
+			long length = newFile.length() - 1;
+			byte b;
+			do {                     
+			  length -= 1;
+			  newFile.seek(length);
+			  b = newFile.readByte();
+			} while(b != 10 && length > 0);
+			byte[] byteTemp = new byte[(int) (newFile.length()-length-3)];
+			newFile.readFully(byteTemp);
+			newFile.close();
+			System.out.println("Letzte Zeile in CSGOLoungeData falls schon existent: " + new String(byteTemp, "UTF-8"));
+			updateStartingId = Integer.parseInt(new String(byteTemp, "UTF-8"));
+			
+			//delete last N lines, where N is the amount of matches that have to be updated
+			newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
+			length = newFile.length() - 1;
+			//Setzt den filePointer genau N zeilen zur�ck, N = matchArray.length - updateStartingId+1
+			for(int i=0; i<matchArray.length - updateStartingId+1;i++){
 				do {                     
 				  length -= 1;
 				  newFile.seek(length);
 				  b = newFile.readByte();
 				} while(b != 10 && length > 0);
-				byte[] byteTemp = new byte[(int) (newFile.length()-length-3)];
-				newFile.readFully(byteTemp);
-				newFile.close();
-				updateStartingId = Integer.parseInt(new String(byteTemp, "UTF-8"));
-				
-				//delete last N lines, where N is the amount of matches that have to be updated
-				newFile = new RandomAccessFile("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", "rw");
-				length = newFile.length() - 1;
-				//Setzt den filePointer genau N zeilen zur�ck, N = matchArray.length - updateStartingId+1
-				for(int i=0; i<matchArray.length - updateStartingId+1;i++){
-					do {                     
-					  length -= 1;
-					  newFile.seek(length);
-					  b = newFile.readByte();
-					} while(b != 10 && length > 0);
-				}
-				newFile.setLength(length+1);
-				newFile.close();
-				
-				//Aktualisiere ab dem ersten nicht geschlossenem Match im alten Stand (updateStartingId) und trage das letzte
-				//nicht geschlossene match nach dem neuen Stand in die Datei
-				System.out.println(updateStartingId);
-				for(int i=1; i<matchArray.length; i++){
-					//suche erstes nicht geschlossenes match
-					if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
-						lastUnclosedMatch = i;
-						System.out.println(lastUnclosedMatch);
-						break;
-					}
-				}
-				
 			}
+			newFile.setLength(length+1);
+			newFile.close();
+			
+			//Aktualisiere ab dem ersten nicht geschlossenem Match im alten Stand (updateStartingId) und trage das letzte
+			//nicht geschlossene match nach dem neuen Stand in die Datei
+			System.out.println(updateStartingId);
+			for(int i=1; i<matchArray.length; i++){
+				//suche erstes nicht geschlossenes match
+				if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
+					lastUnclosedMatch = i;
+					System.out.println(lastUnclosedMatch);
+					break;
+				}
+			}*/
+			
+		}
+		
+		//erstellen eines PrintWriters im append=true modus um neue Games ins file einzutragen
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
+			
 			
 			//ab updateStartingId beginnen die matches zu aktualisieren
 			for(int i=updateStartingId; i<matchArray.length; i++){
@@ -210,12 +271,14 @@ public class MatchInformation {
 		    }
 			//Schreiben des aktuellsten Stands in die letzte Zeile der Datei um sp�ter von dort aus weiter machen zu k�nnen
 			out.println(lastUnclosedMatch);
-	    	System.out.println("fertig");
+	    	System.out.println("Lounge File erstellung+update fertig");
 			out.close();
 		}catch (IOException e) {
 		    //exception handling left as an exercise for the reader
 			System.out.println("Error");
 		}
+		
+		System.out.println("Dauer des File aktualisierens: " + (System.currentTimeMillis() - timer) + "ms");
 	}
 
 	/**
@@ -305,13 +368,12 @@ public class MatchInformation {
 				        try {
 				            while( ( line = buffreader.readLine() ) != null )  {
 				            	//debug
-				            	System.out.println(line);
+				            	//System.out.println(line);
 				            	matchInfo = line;
 				            	String matchLine = matchInfo.substring(matchInfo.indexOf("id\":")+5, matchInfo.indexOf("\",", matchInfo.indexOf("id\":")+5)) + ";";
 						    	//Lese das match datum aus, format "YYYY-MM-DD HH:MM:SS", kommt nach "when"
 						    	String temp = matchInfo.substring(matchInfo.indexOf("bet_time")+11, matchInfo.indexOf("\",", matchInfo.indexOf("bet_time")+11));
 						    	String monthTemp = null;
-						    	System.out.println(temp.substring(0, 3));
 						    	switch(temp.substring(0, 3)){
 						    	case "Jan":monthTemp = "01";break;
 						    	case "Feb":monthTemp = "02";break;
@@ -357,10 +419,10 @@ public class MatchInformation {
 						    		}else{
 						    			String score = matchInfo.substring(matchInfo.indexOf("["), matchInfo.indexOf("]")+1);
 						    			if(!score.contains(":")){
-						    				System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
+						    				//System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
 						    				score = matchInfo.substring(matchInfo.indexOf("[", matchInfo.indexOf("[")+1), matchInfo.indexOf("]", matchInfo.indexOf("[", matchInfo.indexOf("[")+1))+1);
 						    			};
-						    			System.out.println(score);
+						    			//System.out.println(score);
 						    			int pointsTeam2 = Integer.parseInt(score.substring(score.indexOf(": ")+2, score.indexOf("]")));
 						    			int pointsTeam1 = Integer.parseInt(score.substring(1, score.indexOf(" : ")));
 						    			if(pointsTeam1 > pointsTeam2){
@@ -378,7 +440,7 @@ public class MatchInformation {
 						    	matchLine += temp + ";";
 							    writer.write(matchLine + System.getProperty("line.separator"));
 						    	
-						    	System.out.println(matchLine);
+						    	//System.out.println(matchLine);
 				            }
 				        } catch (IOException e) {
 				            // TODO Auto-generated catch block
@@ -459,7 +521,7 @@ public class MatchInformation {
 	        try {
 	            while( ( line = reader.readLine() ) != null )  {
 	            	//debug
-	            	System.out.println(line);
+	            	//System.out.println(line);
 	            	matchInfo = line;
 	            }
 	        } catch (IOException e) {
@@ -491,19 +553,23 @@ public class MatchInformation {
 					}
 					connectiont.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36");
 					InputStream ist = null;
-					try {
-						ist = connectiont.getInputStream();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					while(true){
+						try {
+							ist = connectiont.getInputStream();
+							break;
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							continue;
+						}
+		        	}
 					BufferedReader readert = new BufferedReader( new InputStreamReader( ist )  );
 					String linet = null;
 					String matchInfot = null;
 			        try {
 			            while( ( linet = readert.readLine() ) != null )  {
 			            	//debug
-			            	System.out.println("gap: "+linet);
+			            	System.out.print("gap. ");
 			            	matchInfot = linet;
 			            	if(!matchInfot.substring(matchInfot.indexOf("success")+9, matchInfot.indexOf(",",matchInfot.indexOf("success")+9)).equals("false")){
 			            		doesContinue = true;
@@ -542,7 +608,7 @@ public class MatchInformation {
 		        	continue;
 		        }
 		        if(matchInfo.contains("s6")){
-		        	System.out.println("Hilfswette");
+		        	//System.out.println("Hilfswette");
 		        	continue;
 		        }
 		        
@@ -554,7 +620,6 @@ public class MatchInformation {
 		    	//Lese das match datum aus, format "YYYY-MM-DD HH:MM:SS", kommt nach "when"
 		    	String temp = matchInfo.substring(matchInfo.indexOf("bet_time")+11, matchInfo.indexOf("\",", matchInfo.indexOf("bet_time")+11));
 		    	String monthTemp = null;
-		    	System.out.println(temp.substring(0, 3));
 		    	switch(temp.substring(0, 3)){
 		    	case "Jan":monthTemp = "01";break;
 		    	case "Feb":monthTemp = "02";break;
@@ -600,10 +665,10 @@ public class MatchInformation {
 		    		}else{
 		    			String score = matchInfo.substring(matchInfo.indexOf("["), matchInfo.indexOf("]")+1);
 		    			if(!score.contains(":")){
-		    				System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
+		    				//System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
 		    				score = matchInfo.substring(matchInfo.indexOf("[", matchInfo.indexOf("[")+1), matchInfo.indexOf("]", matchInfo.indexOf("[", matchInfo.indexOf("[")+1))+1);
 		    			};
-		    			System.out.println(score);
+		    			//System.out.println(score);
 		    			int pointsTeam2 = Integer.parseInt(score.substring(score.indexOf(": ")+2, score.indexOf("]")));
 		    			int pointsTeam1 = Integer.parseInt(score.substring(1, score.indexOf(" : ")));
 		    			if(pointsTeam1 > pointsTeam2){
@@ -621,7 +686,7 @@ public class MatchInformation {
 		    	matchLine += temp + ";";
 		    	out.println(matchLine);
 		    	
-		    	System.out.println(matchLine);
+		    	//System.out.println(matchLine);
 		    	
 		    	/*//get odds for team b, dummy variable wasSucc indicates if odds are availible for this match
 		    	wasSucc = false;
@@ -671,9 +736,9 @@ public class MatchInformation {
 		tempFile = new File("C:"+File.separator+"csgobetting"+File.separator+"EGBDataNew.txt");
 		if(inputFile.exists()){
 			System.gc();
-			inputFile.delete();
+			System.out.println("EGBData (alte datei) löschen erfolgreich: "+inputFile.delete());
 		}
-		System.out.println(tempFile.renameTo(inputFile));
+		System.out.println("EGBDataNew in EGBData umbenennen erfolgreich: " + tempFile.renameTo(inputFile));
 	}
 
 	/**
@@ -691,7 +756,7 @@ public class MatchInformation {
 		File f = new File(path);
 		if(f.exists()){
 			System.gc();
-			f.delete();
+			System.out.println("linklistopen.txt löschen erfolgreich: " + f.delete());
 		}
 		//(works for both Windows and Linux)
 		f.getParentFile().mkdirs();
@@ -1102,10 +1167,10 @@ public class MatchInformation {
 		    		}else{
 		    			String score = matchInfo.substring(matchInfo.indexOf("["), matchInfo.indexOf("]")+1);
 		    			if(!score.contains(":")){
-		    				System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
+		    				//System.out.println(""+matchInfo.indexOf("[", matchInfo.indexOf("[")+1));
 		    				score = matchInfo.substring(matchInfo.indexOf("[", matchInfo.indexOf("[")+1), matchInfo.indexOf("]", matchInfo.indexOf("[", matchInfo.indexOf("[")+1))+1);
 		    			};
-		    			System.out.println(score);
+		    			//System.out.println(score);
 		    			int pointsTeam2 = Integer.parseInt(score.substring(score.indexOf(": ")+2, score.indexOf("]")));
 		    			int pointsTeam1 = Integer.parseInt(score.substring(1, score.indexOf(" : ")));
 		    			if(pointsTeam1 > pointsTeam2){

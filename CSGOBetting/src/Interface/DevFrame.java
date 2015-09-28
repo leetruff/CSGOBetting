@@ -65,17 +65,14 @@ public class DevFrame extends JFrame {
 		btnButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO Was soll Button 1 machen?
+				long timer = System.currentTimeMillis();
 				MatchInformation Info = new MatchInformation();
-				lblDebugstring.setText("Updating Lounge File");
 				Info.createLoungeFile();
-				lblDebugstring.setText("Updating EGB File");
 				Info.createEGBFile();
-				lblDebugstring.setText("Updating linklistclosed File");
 				Info.createClosedBetLinkList();
-				lblDebugstring.setText("Updating linklistopen File");
 				Info.createOpenBetLinkList();
-				lblDebugstring.setText("Finished");
 				Info = null;
+				lblDebugstring.setText("Finished in " + (System.currentTimeMillis() - timer) + "ms");
 			}
 		});
 		btnButton_1.setBounds(10, 60, 213, 23);
