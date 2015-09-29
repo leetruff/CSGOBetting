@@ -1,5 +1,4 @@
 package MatchInformation;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 
@@ -21,12 +20,13 @@ public class Match {
 	String team2LoungeOdds;
 	String team1EGBOdds;
 	String team2EGBOdds;
+	String recommendedBet;
 	int winner;
 	Match relatedEGBMatch;
 	Match relatedCSGLMatch;
 	
 	/**
-	 * isSwitched ist nur fuer EGB Matches relevant, welche einem Lounge Match zugeordnet wurden!
+	 * isSwitched ist nur fuer EGB Matches relevant(wird nur bei EGB matches gesetzt), welche einem Lounge Match zugeordnet wurden!
 	 */
 	public boolean isSwitched;
 	Matchtyp typ;
@@ -45,9 +45,154 @@ public class Match {
 		this.datum = datum;
 		this.team1LoungeOdds = team1LoungeOdds;
 		this.team2LoungeOdds = team2LoungeOdds;
+		recommendedBet = "Noch nicht berechnet";
 	}
 	
+		private void createRecommendedBetString(){
+			switch(typ){
+			case EGB:{
+				if(relatedCSGLMatch.equals(null)){
+					recommendedBet = "Keine Wette moeglich";
+				}else{
+					double allOdds[] = new double[4];
+					allOdds[2] = Double.parseDouble(team1LoungeOdds);
+					allOdds[3] = Double.parseDouble(team2LoungeOdds);
+					if(isSwitched){
+						allOdds[0] = Double.parseDouble(relatedCSGLMatch.getTeam2Odds());
+						allOdds[1] = Double.parseDouble(relatedCSGLMatch.getTeam1Odds());
+					}else{
+						allOdds[0] = Double.parseDouble(relatedCSGLMatch.getTeam1Odds());
+						allOdds[1] = Double.parseDouble(relatedCSGLMatch.getTeam2Odds());
+					}
+					processOdds(allOdds);
+				}
+			} break;
+			case CSGOLounge:{
+				if(relatedEGBMatch.equals(null)){
+					recommendedBet = "Keine Wette moeglich";
+				}else{
+					double allOdds[] = new double[4];
+					allOdds[0] = Double.parseDouble(team1LoungeOdds);
+					allOdds[1] = Double.parseDouble(team2LoungeOdds);
+					if(relatedEGBMatch.isSwitched){
+						allOdds[2] = Double.parseDouble(relatedEGBMatch.getTeam2Odds());
+						allOdds[3] = Double.parseDouble(relatedEGBMatch.getTeam1Odds());
+					}else{
+						allOdds[2] = Double.parseDouble(relatedEGBMatch.getTeam1Odds());
+						allOdds[3] = Double.parseDouble(relatedEGBMatch.getTeam2Odds());
+					}
+					processOdds(allOdds);
+				}
+			} break;
+			default:{
+				System.out.println("Beim ENUM in der match klasse ist was schiefgegangen");
+			} break;
+			}
+		}
 	
+		//check on what team one should bet and give the odds to the according functions
+		private void processOdds(double[] allOdds){
+			//calc new egb odds
+			allOdds[2] = calculateNewOdds(allOdds)[0];
+			allOdds[3] = calculateNewOdds(allOdds)[1];
+			
+			if(Double.isNaN(allOdds[0]) || Double.isNaN(allOdds[1])
+					|| Double.isNaN(allOdds[2]) || Double.isNaN(allOdds[3]) 
+					|| allOdds[0] > 1 || allOdds[2] > 1 || allOdds[0] < 0  || allOdds[2] < 0
+					|| allOdds[1] > 1 || allOdds[3] > 1 || allOdds[1] < 0  || allOdds[3] < 0){
+				setBetString("Error with Odds", 0);
+				return;
+			}
+			
+			if(allOdds[0] > allOdds[2]){
+				//bet on lounge team2
+				if(allOdds[1] < 0.26 || allOdds[1] > 0.9){
+					setBetString("Skip", 0);
+					return;
+				}
+				setBetString(""+getKellyBet(allOdds[1], allOdds[3]) , 2);
+			}else{
+				//bet on lounge team1
+				if(allOdds[0] < 0.26 || allOdds[0] > 0.9){
+					setBetString("Skip", 0);
+					return;
+				}
+				setBetString(""+getKellyBet(allOdds[0], allOdds[2]) , 1);
+			}
+		}
+		
+		private void setBetString(String string, int team){
+			switch(team){
+				case 0:{
+					switch(typ){
+					case CSGOLounge:{
+						recommendedBet = string;
+					}break;
+					case EGB:{
+						relatedCSGLMatch.setRecommendedBet(string);
+					}break;
+					}
+				}break;
+				case 1:{
+					switch(typ){
+					case CSGOLounge:{
+						recommendedBet = string + "% on Team " + team1Name;
+					}break;
+					case EGB:{
+						relatedCSGLMatch.setRecommendedBet(string + "% on Team " + relatedCSGLMatch.getTeam1Name());
+					}break;
+					}
+				}break;
+				case 2:{
+					switch(typ){
+					case CSGOLounge:{
+						recommendedBet = string + "% on Team " + team2Name;
+					}break;
+					case EGB:{
+						relatedCSGLMatch.setRecommendedBet(string + "% on Team " + relatedCSGLMatch.getTeam2Name());
+					}break;
+					}
+					
+				}break;
+			}
+		}
+		
+		//EGB Odds einfuegen -> veraenderte Odds returnen
+		private double[] calculateNewOdds(double[] oldOdds){
+			double[] newOdds = new double[2];
+			newOdds[0] = oldOdds[2] + funktion1(oldOdds[2], 1.0, 0.232);
+			newOdds[1] = oldOdds[3] + funktion1(oldOdds[3], 1.0, 0.232);
+			return newOdds;
+		}
+
+		//ganz normaler kelly rechner
+		private double getKellyBet(Double loungeOdds, Double realOdds) {
+			double kellyPercentage;
+			double b;
+			b = (1-loungeOdds)/loungeOdds;
+			//System.out.println("Lounge Odds: " + loungeOdds + "   Real Odds: " + realOdds + "    b: " + b);
+			kellyPercentage = (realOdds*(b + 1) - 1)/b;
+			return kellyPercentage;
+		}
+		
+		//funktion um die egb odds zu verändern
+		private double funktion1(double x, double multiplier, double shift){
+			double y = x;
+			x = x - 0.5;
+			double k = (1.0/(4.0*shift))-0.5;
+			double j = (0.25-0.5*shift)/(0.5-shift);
+			if(x<=-0.3){
+				y=-j*x-0.5*j;
+				y *= multiplier;
+			}else if (x > -shift && x <= shift){
+				y=k*x;
+				y *= multiplier;
+			}else if (x > shift && x <= 0.5){
+				y=-j*x+0.5*j;
+				y *= multiplier;
+			}
+			return y;
+		}
 	
 	/**
 	 * 
@@ -117,6 +262,16 @@ public class Match {
 	
 	public boolean isSwitched(){
 		return isSwitched;
+	}
+	
+	
+
+	public String getRecommendedBet() {
+		return recommendedBet;
+	}
+
+	public void setRecommendedBet(String recommendedBet) {
+		this.recommendedBet = recommendedBet;
 	}
 
 	/**

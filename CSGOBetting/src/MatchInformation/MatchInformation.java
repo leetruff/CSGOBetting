@@ -155,7 +155,8 @@ public class MatchInformation {
 			
 			for(int i=1; i<matchArray.length; i++){
 				//suche erstes nicht geschlossenes match
-				if(Integer.parseInt(matchArray[i].substring(matchArray[i].indexOf("closed")+9, matchArray[i].indexOf("closed")+10)) == 0){
+				if(Integer.parseInt(matchArray[i].substring(9,matchArray[i].indexOf("\",\"", 9))) == lastUnclosedMatch){
+					System.out.println("Check für Neueinstiegspunkt: " + lastUnclosedMatch);
 					updateStartingId = i;
 					break;
 				}
