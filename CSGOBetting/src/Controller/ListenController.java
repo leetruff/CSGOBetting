@@ -57,6 +57,7 @@ public class ListenController {
 		readEGBDataFromFile();
 		
 		aktuelleList = getLoungeMatches();
+		reader.close();
 	}
 	
 	
@@ -132,7 +133,6 @@ public class ListenController {
 				continue;
 			}
 		}
-		
 	}
 	
 	
@@ -213,7 +213,7 @@ public class ListenController {
 				continue;
 			}
 		}
-		
+		reader.close();
 	}
 	
 	/**
@@ -279,7 +279,7 @@ public class ListenController {
 			}
 		
 		}
-		
+		reader.close();
 		bothMatchList = tempList;
 		return bothMatchList;
 	}
@@ -341,7 +341,7 @@ public class ListenController {
 			}
 		
 		}
-		
+		reader.close();
 		bothMatchArchiveList = tempList;
 		return bothMatchArchiveList;
 	}

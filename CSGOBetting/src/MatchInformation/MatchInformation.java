@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -141,7 +143,13 @@ public class MatchInformation {
 			File tempFile = new File("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeDataNew.txt");
 			if(loungeFile.exists()){
 				System.gc();
-				System.out.println("LoungeData (alte datei) löschen erfolgreich: "+loungeFile.delete());
+				//System.out.println("LoungeData (alte datei) löschen erfolgreich: "+loungeFile.delete());
+				try {
+					Files.delete(FileSystems.getDefault().getPath("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			System.out.println("LoungeDataNew in LoungeData umbenennen erfolgreich: " + tempFile.renameTo(loungeFile));
 			
@@ -736,7 +744,13 @@ public class MatchInformation {
 		tempFile = new File("C:"+File.separator+"csgobetting"+File.separator+"EGBDataNew.txt");
 		if(inputFile.exists()){
 			System.gc();
-			System.out.println("EGBData (alte datei) löschen erfolgreich: "+inputFile.delete());
+			//System.out.println("EGBData (alte datei) löschen erfolgreich: "+inputFile.delete());
+			try {
+				Files.delete(FileSystems.getDefault().getPath("C:"+File.separator+"csgobetting"+File.separator+"EGBData.txt"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		System.out.println("EGBDataNew in EGBData umbenennen erfolgreich: " + tempFile.renameTo(inputFile));
 	}
