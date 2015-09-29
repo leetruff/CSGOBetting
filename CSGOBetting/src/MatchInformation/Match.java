@@ -24,6 +24,10 @@ public class Match {
 	int winner;
 	Match relatedEGBMatch;
 	Match relatedCSGLMatch;
+	
+	/**
+	 * isSwitched ist nur fuer EGB Matches relevant, welche einem Lounge Match zugeordnet wurden!
+	 */
 	public boolean isSwitched;
 	Matchtyp typ;
 	
