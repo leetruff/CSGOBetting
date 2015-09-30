@@ -260,6 +260,12 @@ public class MainWindow {
 		sorter.setComparator(7, new DateComparator());
 		table.setRowSorter(sorter);
 		
+		
+		
+		
+		
+
+		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
 		/**
@@ -339,6 +345,31 @@ public class MainWindow {
 		});
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"CSGL + EGB", "CSGL + EGB Archive", "CSGL", "EGB"}));
 		frmCsgoBettingCalculator.getContentPane().add(comboBox, "cell 2 0 2 1,alignx left");
+		
+		String currentItem1 = (String) comboBox.getSelectedItem();
+		switch (currentItem1) {
+		case "CSGL + EGB":
+			table.getRowSorter().toggleSortOrder(7);
+			break;
+			
+		case "CSGL + EGB Archive":
+			table.getRowSorter().toggleSortOrder(7);
+			table.getRowSorter().toggleSortOrder(7);
+			break;
+			
+		case "CSGL":
+			table.getRowSorter().toggleSortOrder(7);
+			table.getRowSorter().toggleSortOrder(7);
+			break;
+			
+		case "EGB":
+			table.getRowSorter().toggleSortOrder(7);
+			table.getRowSorter().toggleSortOrder(7);
+			break;
+
+		default:
+			break;
+		}
 		
 		/**
 		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
@@ -702,8 +733,32 @@ public class MainWindow {
     		sorter.setComparator(3, new DoubleComparator());
     		sorter.setComparator(7, new DateComparator());
     		table.setRowSorter(sorter);
+    		
             
-            
+    		String currentItem1 = (String) comboBox.getSelectedItem();
+    		switch (currentItem1) {
+    		case "CSGL + EGB":
+    			table.getRowSorter().toggleSortOrder(7);
+    			break;
+    			
+    		case "CSGL + EGB Archive":
+    			table.getRowSorter().toggleSortOrder(7);
+    			table.getRowSorter().toggleSortOrder(7);
+    			break;
+    			
+    		case "CSGL":
+    			table.getRowSorter().toggleSortOrder(7);
+    			table.getRowSorter().toggleSortOrder(7);
+    			break;
+    			
+    		case "EGB":
+    			table.getRowSorter().toggleSortOrder(7);
+    			table.getRowSorter().toggleSortOrder(7);
+    			break;
+
+    		default:
+    			break;
+    		}
             
         	
         	DefaultTableModel model = (DefaultTableModel) table.getModel();
