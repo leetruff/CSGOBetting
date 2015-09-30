@@ -260,6 +260,9 @@ public class MainWindow {
 		sorter.setComparator(7, new DateComparator());
 		table.setRowSorter(sorter);
 		
+		table.getRowSorter().toggleSortOrder(7);
+
+		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
 		/**
@@ -701,6 +704,8 @@ public class MainWindow {
     		sorter.setComparator(3, new DoubleComparator());
     		sorter.setComparator(7, new DateComparator());
     		table.setRowSorter(sorter);
+    		
+    		table.getRowSorter().toggleSortOrder(7);
             
             
             
