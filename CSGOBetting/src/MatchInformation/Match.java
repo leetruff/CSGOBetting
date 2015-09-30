@@ -118,14 +118,19 @@ public class Match {
 					setBetString("Skip", 0);
 					return;
 				}
-				setBetString(""+100*getKellyBet(allOdds[1], allOdds[3]) , 2);
+				//setBetString(""+100*getKellyBet(allOdds[1], allOdds[3]) , 2);
+				double temp = 100*getKellyBet(allOdds[1], allOdds[3]);
+				temp = Math.round(temp * 100) / 100.0;
+				setBetString(""+ temp, 2);
 			}else{
 				//bet on lounge team1
 				if(allOdds[0] < 0.26 || allOdds[0] > 0.9){
 					setBetString("Skip", 0);
 					return;
 				}
-				setBetString(""+100*getKellyBet(allOdds[0], allOdds[2]) , 1);
+				double temp = 100*getKellyBet(allOdds[0], allOdds[2]);
+				temp = Math.round(temp * 100) / 100.0;
+				setBetString(""+ temp, 1);
 			}
 		}
 		
@@ -180,7 +185,6 @@ public class Match {
 			b = (1-loungeOdds)/loungeOdds;
 			//System.out.println("Lounge Odds: " + loungeOdds + "   Real Odds: " + realOdds + "    b: " + b);
 			kellyPercentage = (realOdds*(b + 1) - 1)/b;
-			kellyPercentage = Math.round(kellyPercentage * 10000) / 10000.0;
 			return kellyPercentage;
 		}
 		
