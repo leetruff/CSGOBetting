@@ -36,6 +36,7 @@ import MatchInformation.MatchInformation;
 import MatchInformation.Matchtyp;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
+import javax.swing.SwingConstants;
 
 /**
  * 
@@ -75,6 +76,7 @@ public class MainWindow {
 	private JButton btnDevtools;
 	private JComboBox comboBox;
 	private JButton btnOpenEgb;
+	private JLabel lblNewLabel;
 
 
 	/**
@@ -504,11 +506,13 @@ public class MainWindow {
 		btnOpenEgb = new JButton("Open EGB  ");
 		btnOpenEgb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(getMarkedMatchup().getMatchtyp().equals(Matchtyp.EGB))
+				if(getMarkedMatchup().getMatchtyp().equals(Matchtyp.EGB)){
 					openWebPage("http://egamingbets.com/tables#" + getMarkedMatchup().getID());
+				}
 				
-				else if(getMarkedMatchup().getRelatedEGBMatch() != null && getMarkedMatchup().getRelatedEGBMatch().getMatchtyp().equals(Matchtyp.EGB))
+				else if(getMarkedMatchup().getRelatedEGBMatch() != null && getMarkedMatchup().getRelatedEGBMatch().getMatchtyp().equals(Matchtyp.EGB)){
 					openWebPage("http://egamingbets.com/tables#" + getMarkedMatchup().getRelatedEGBMatch().getID());
+				}
 				
 				else{
 					int dialogButton = JOptionPane.ERROR_MESSAGE;
@@ -517,6 +521,10 @@ public class MainWindow {
 				}
 			}
 		});
+		
+		lblNewLabel = new JLabel("Dummy");
+		lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 17));
+		panel.add(lblNewLabel, "cell 1 10");
 		panel.add(btnOpenEgb, "cell 0 11,alignx left,aligny bottom");
 		panel.add(btnOpenInBrowser, "cell 2 11,alignx right,aligny bottom");
 		
@@ -790,6 +798,8 @@ public class MainWindow {
 	 */
 	private void showMatchInformation(){
 		Match match = getMarkedMatchup();
+		match.createRecommendedBetString();
+		lblNewLabel.setText(match.getRecommendedBet());
 		
 		lblTeam.setText(match.getTeam1Name());
 		lblTeam_1.setText(match.getTeam2Name());
@@ -860,9 +870,38 @@ public class MainWindow {
 			lblEgb.setText("EGB: " + team1OddsEGB + "%");
 			lblEgb_1.setText("EGB: " + team2OddsEGB + "%");
 			
-		}
-		
+		}else if(match.getRelatedCSGLMatch() != null){
+			lblNewLabel.setText(match.getRelatedCSGLMatch().getRecommendedBet());
+			double team1CSGL = Double.parseDouble(match.getRelatedCSGLMatch().getTeam1Odds());
+			double team2CSGL = Double.parseDouble(match.getRelatedCSGLMatch().getTeam2Odds());
+			
+			/**
+			 * Odds als prozentuale Werte berechnen
+			 */
 
+			double team1OddsCSGL;
+			double team2OddsCSGL;
+			
+			if(match.isSwitched){
+				team1OddsCSGL = team2CSGL / (team1CSGL + team2CSGL) *100;
+				team2OddsCSGL = team1CSGL / (team1CSGL + team2CSGL) *100;
+			}
+			
+			else{
+				team1OddsCSGL = team1CSGL / (team1CSGL + team2CSGL) *100;
+				team2OddsCSGL = team2CSGL / (team1CSGL + team2CSGL) *100;
+			}
+			
+			/**
+			 * Hier wird bestimmt, auf wieviele Nachkommastellen wir die Odds runden. Fuer mehr Nachkommastellen einfach
+			 * die Anzahl der 0 in der Rechnung auf beiden Seiten erhoehen.
+			 */
+			team1OddsCSGL = Math.round(team1OddsCSGL * 100) / 100.0;
+			team2OddsCSGL = Math.round(team2OddsCSGL * 100) / 100.0;
+			
+			lblCsgl.setText("CSGL: " + team1OddsCSGL + "%");
+			lblCsgl_1.setText("CSGL: " + team2OddsCSGL + "%");
+		}
 		
 	}
 	

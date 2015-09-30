@@ -48,10 +48,10 @@ public class Match {
 		recommendedBet = "Noch nicht berechnet";
 	}
 	
-		private void createRecommendedBetString(){
+		public void createRecommendedBetString(){
 			switch(typ){
 			case EGB:{
-				if(relatedCSGLMatch.equals(null)){
+				if(relatedCSGLMatch == null){
 					recommendedBet = "Keine Wette moeglich";
 				}else{
 					double allOdds[] = new double[4];
@@ -68,7 +68,7 @@ public class Match {
 				}
 			} break;
 			case CSGOLounge:{
-				if(relatedEGBMatch.equals(null)){
+				if(relatedEGBMatch == null){
 					recommendedBet = "Keine Wette moeglich";
 				}else{
 					double allOdds[] = new double[4];
@@ -92,6 +92,14 @@ public class Match {
 	
 		//check on what team one should bet and give the odds to the according functions
 		private void processOdds(double[] allOdds){
+			//calculate percent odds from rates
+			double a[] = new double[]{allOdds[0], allOdds[1], allOdds[2], allOdds[3]};
+			allOdds[0] = a[0]/(a[0]+a[1]);
+			allOdds[1] = a[1]/(a[0]+a[1]);
+			allOdds[2] = a[3]/(a[2]+a[3]);
+			allOdds[3] = a[2]/(a[2]+a[3]);
+			
+			
 			//calc new egb odds
 			allOdds[2] = calculateNewOdds(allOdds)[0];
 			allOdds[3] = calculateNewOdds(allOdds)[1];
@@ -110,14 +118,14 @@ public class Match {
 					setBetString("Skip", 0);
 					return;
 				}
-				setBetString(""+getKellyBet(allOdds[1], allOdds[3]) , 2);
+				setBetString(""+100*getKellyBet(allOdds[1], allOdds[3]) , 2);
 			}else{
 				//bet on lounge team1
 				if(allOdds[0] < 0.26 || allOdds[0] > 0.9){
 					setBetString("Skip", 0);
 					return;
 				}
-				setBetString(""+getKellyBet(allOdds[0], allOdds[2]) , 1);
+				setBetString(""+100*getKellyBet(allOdds[0], allOdds[2]) , 1);
 			}
 		}
 		
@@ -172,6 +180,7 @@ public class Match {
 			b = (1-loungeOdds)/loungeOdds;
 			//System.out.println("Lounge Odds: " + loungeOdds + "   Real Odds: " + realOdds + "    b: " + b);
 			kellyPercentage = (realOdds*(b + 1) - 1)/b;
+			kellyPercentage = Math.round(kellyPercentage * 10000) / 10000.0;
 			return kellyPercentage;
 		}
 		
