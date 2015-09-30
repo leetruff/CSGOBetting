@@ -442,7 +442,8 @@ public class MainWindow {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			
+				
+				
 			}
 		});
 		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll, "cell 0 0,growx,aligny center");
