@@ -114,7 +114,7 @@ public class Match {
 			
 			if(allOdds[0] > allOdds[2]){
 				//bet on lounge team2
-				if(allOdds[1] < 0.33 || allOdds[1] > 0.7){
+				if(allOdds[1] < 0.09 || allOdds[1] > 0.7){
 					setBetString("Skip", 0);
 					return;
 				}
@@ -124,7 +124,7 @@ public class Match {
 				setBetString(""+ temp, 2);
 			}else{
 				//bet on lounge team1
-				if(allOdds[0] < 0.33 || allOdds[0] > 0.7){
+				if(allOdds[0] < 0.09 || allOdds[0] > 0.7){
 					setBetString("Skip", 0);
 					return;
 				}
@@ -173,8 +173,8 @@ public class Match {
 		//EGB Odds einfuegen -> veraenderte Odds returnen
 		private double[] calculateNewOdds(double[] oldOdds){
 			double[] newOdds = new double[2];
-			newOdds[0] = oldOdds[2] + funktion1(oldOdds[2], 1.0, 0.23);
-			newOdds[1] = oldOdds[3] + funktion1(oldOdds[3], 1.0, 0.23);
+			newOdds[0] = oldOdds[2] + funktion1(oldOdds[2], 0.7, 0.16);
+			newOdds[1] = oldOdds[3] + funktion1(oldOdds[3], 0.7, 0.16);
 			return newOdds;
 		}
 
@@ -185,6 +185,11 @@ public class Match {
 			b = (1-loungeOdds)/loungeOdds;
 			//System.out.println("Lounge Odds: " + loungeOdds + "   Real Odds: " + realOdds + "    b: " + b);
 			kellyPercentage = (realOdds*(b + 1) - 1)/b;
+			if(kellyPercentage > 0.1 && kellyPercentage <= 0.4){
+				kellyPercentage *= 0.5;
+			}else if(kellyPercentage > 0.4 && kellyPercentage < 1){
+				kellyPercentage *= 0.33333333;
+			}
 			return kellyPercentage;
 		}
 		
@@ -194,7 +199,7 @@ public class Match {
 			x = x - 0.5;
 			double k = (1.0/(4.0*shift))-0.5;
 			double j = (0.25-0.5*shift)/(0.5-shift);
-			if(x<=-0.3){
+			if(x<=-shift){
 				y=-j*x-0.5*j;
 				y *= multiplier;
 			}else if (x > -shift && x <= shift){
