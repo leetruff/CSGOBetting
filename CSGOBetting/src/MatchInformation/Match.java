@@ -187,7 +187,7 @@ public class Match {
 			kellyPercentage = (realOdds*(b + 1) - 1)/b;
 			if(kellyPercentage > 0.1 && kellyPercentage <= 0.4){
 				kellyPercentage *= 0.5;
-			}else if(kellyPercentage > 0.4 && kellyPercentage < 1){
+			}else if(kellyPercentage > 0.4 && kellyPercentage <= 1){
 				kellyPercentage *= 0.33333333;
 			}
 			return kellyPercentage;
