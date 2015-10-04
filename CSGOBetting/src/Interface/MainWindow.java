@@ -77,6 +77,7 @@ public class MainWindow {
 	private JComboBox comboBox;
 	private JButton btnOpenEgb;
 	private JLabel lblNewLabel;
+	boolean suchliste;
 
 
 	/**
@@ -276,6 +277,8 @@ public class MainWindow {
 		comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				suchliste = false;
 				
 				/**
 				 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
@@ -606,6 +609,8 @@ public class MainWindow {
 		 */
 		if(text.equals("") || text == null || text.equals("Suche...")){
 			
+			suchliste = false;
+			
 			String currentItem = (String) comboBox.getSelectedItem();
 			switch (currentItem) {
 			case "CSGL + EGB":
@@ -666,6 +671,7 @@ public class MainWindow {
 			listCtrl.setAktuelleList(aktuelleList);
 		}
 		
+		suchliste = true;
 		updateTable();
 	}
 
@@ -764,36 +770,37 @@ public class MainWindow {
         	DefaultTableModel model = (DefaultTableModel) table.getModel();
         	
         	
-        	/**
-    		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
-    		 */
-    		String currentItem = (String) comboBox.getSelectedItem();
-    		switch (currentItem) {
-    		case "CSGL + EGB":
-    			aktuelleList = listCtrl.getBothMatches();
-    			listCtrl.setAktuelleList(aktuelleList);
-    			break;
-    			
-    		case "CSGL + EGB Archive":
-    			aktuelleList = listCtrl.getBothMatchesArchive();
-    			listCtrl.setAktuelleList(aktuelleList);
-    			break;
-    			
-    		case "CSGL":
-    			aktuelleList = listCtrl.getLoungeMatches();
-    			listCtrl.setAktuelleList(aktuelleList);
-    			break;
-    			
-    		case "EGB":
-    			aktuelleList = listCtrl.getEGBMatches();
-    			listCtrl.setAktuelleList(aktuelleList);
-    			break;
-
-    		default:
-    			break;
-    		}
+        	if(suchliste = false){
+	        	/**
+	    		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
+	    		 */
+	    		String currentItem = (String) comboBox.getSelectedItem();
+	    		switch (currentItem) {
+	    		case "CSGL + EGB":
+	    			aktuelleList = listCtrl.getBothMatches();
+	    			listCtrl.setAktuelleList(aktuelleList);
+	    			break;
+	    			
+	    		case "CSGL + EGB Archive":
+	    			aktuelleList = listCtrl.getBothMatchesArchive();
+	    			listCtrl.setAktuelleList(aktuelleList);
+	    			break;
+	    			
+	    		case "CSGL":
+	    			aktuelleList = listCtrl.getLoungeMatches();
+	    			listCtrl.setAktuelleList(aktuelleList);
+	    			break;
+	    			
+	    		case "EGB":
+	    			aktuelleList = listCtrl.getEGBMatches();
+	    			listCtrl.setAktuelleList(aktuelleList);
+	    			break;
+	
+	    		default:
+	    			break;
+	    		}
         	
-        	
+        	}	
         	
         	
     		/**
