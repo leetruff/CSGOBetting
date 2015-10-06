@@ -1002,6 +1002,9 @@ public class MainWindow {
 				
 				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
 				lblTimeLeft.setText("Time left: " + df.format(timeLeft));
+				
+				if(timeLeft < -(1000*60*60))
+					lblTimeLeft.setText("Match has started / ended!");
 			}
 		});
 		timer.setInitialDelay(0);
