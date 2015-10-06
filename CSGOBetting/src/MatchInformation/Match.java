@@ -284,6 +284,14 @@ public class Match {
 	
 	
 
+	public Matchtyp getTyp() {
+		return typ;
+	}
+
+	public void setTyp(Matchtyp typ) {
+		this.typ = typ;
+	}
+
 	public String getRecommendedBet() {
 		return recommendedBet;
 	}

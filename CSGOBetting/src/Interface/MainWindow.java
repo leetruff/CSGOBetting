@@ -514,6 +514,25 @@ public class MainWindow {
 		lblTimeLeft = new JLabel("Time left:");
 		panel.add(lblTimeLeft, "cell 0 0");
 		JButton btnUpdateThis = new JButton("Update this");
+		btnUpdateThis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MatchInformation mInfo = new MatchInformation();
+				Match match = getMarkedMatchup();
+				Match match2;
+				switch(match.getMatchtyp()){
+				case CSGOLounge:{
+					match2 = match.getRelatedEGBMatch();
+					
+				}break;
+				case EGB:{
+					match2 = match.getRelatedCSGLMatch();
+					
+				}break;
+				}
+				//set all strings with new match info
+				//match.createRecommendedBetString();
+			}
+		});
 		panel.add(btnUpdateThis, "cell 2 0,alignx right,aligny top");
 		
 		lblTeam = new JLabel("Team 1");
