@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
@@ -36,7 +37,6 @@ import MatchInformation.MatchInformation;
 import MatchInformation.Matchtyp;
 import Renderer.Team1TableCellRenderer;
 import Renderer.Team2TableCellRenderer;
-import javax.swing.SwingConstants;
 
 /**
  * 
@@ -78,6 +78,9 @@ public class MainWindow {
 	private JButton btnOpenEgb;
 	private JLabel lblNewLabel;
 	boolean suchliste;
+	private JLabel lblTimeLeft;
+
+	private Timer timer;
 
 
 	/**
@@ -202,6 +205,11 @@ public class MainWindow {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				table.repaint();
+
+				if(timer != null){
+					timer.stop();
+					timer = null;
+				}
 				showMatchInformation();
 			}
 		});
@@ -493,6 +501,9 @@ public class MainWindow {
 		 * Knopf, welcher nur das aktuell ausgewaehlte Match updated (zwecks Performance)
 		 */
 		panel.setLayout(new MigLayout("", "[182.00px][304.00px][290.00px]", "[28px][16px][16px][16px][16px][28px][38px][][][][][451.00]"));
+		
+		lblTimeLeft = new JLabel("Time left:");
+		panel.add(lblTimeLeft, "cell 0 0");
 		JButton btnUpdateThis = new JButton("Update this");
 		panel.add(btnUpdateThis, "cell 2 0,alignx right,aligny top");
 		
@@ -964,7 +975,34 @@ public class MainWindow {
 			
 			lblCsgl.setText("CSGL: " + team1OddsCSGL + "%");
 			lblCsgl_1.setText("CSGL: " + team2OddsCSGL + "%");
+			
 		}
+		
+		
+		/**
+		 * Timer bis Matchstart
+		 */
+		timer = new Timer(10, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				long now = System.currentTimeMillis();
+				
+				/**
+				 * Irgendwie ist 1h offset drin, wird hier einfach abgezogen
+				 */
+				long timeLeft = match.getDatum().getTimeInMillis() - now -(1000*60*60);
+				
+				SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+				lblTimeLeft.setText("Time left: " + df.format(timeLeft));
+			}
+		});
+		timer.setInitialDelay(0);
+		
+		if(timer.isRunning())
+			timer.stop();
+		
+		timer.start();
 		
 	}
 	
