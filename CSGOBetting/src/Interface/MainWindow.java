@@ -1000,7 +1000,7 @@ public class MainWindow {
 				 */
 				long timeLeft = match.getDatum().getTimeInMillis() - now -(1000*60*60);
 				
-				SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
 				lblTimeLeft.setText("Time left: " + df.format(timeLeft));
 			}
 		});
