@@ -3,6 +3,8 @@ package Interface;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,12 +12,17 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import MatchInformation.MatchInformation;
+
 import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class DevFrame extends JFrame {
 
 	private JPanel contentPane;
+	Timer timer = new Timer();
+	boolean isAutoUpdateActive = false;
+	boolean isUpdateProcessRunning = false;
+	MatchInformation Info = new MatchInformation();
 
 	/**
 	 * Launch the application.
@@ -89,5 +96,34 @@ public class DevFrame extends JFrame {
 		});
 		btnButton_2.setBounds(10, 94, 213, 23);
 		contentPane.add(btnButton_2);
+		
+		JButton btnNewButton = new JButton("Start auto-update");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!isAutoUpdateActive){
+					lblDebugstring.setText("Auto-update started");
+					btnNewButton.setText("Stop auto-update");
+					isAutoUpdateActive = true;
+					timer.scheduleAtFixedRate(new TimerTask() {
+						  @Override
+						  public void run() {
+					    	isUpdateProcessRunning = true;
+							Info.createLoungeFile();
+							Info.createEGBFile();
+							Info.createClosedBetLinkList();
+							Info.createOpenBetLinkList();
+					    	isUpdateProcessRunning = false;
+						  }
+						}, 10, 5*1000);
+				}else{
+					lblDebugstring.setText("Auto-update stopped");
+					btnNewButton.setText("Start auto-update");
+					isAutoUpdateActive = false;
+					timer.cancel();
+				}
+			}
+		});
+		btnNewButton.setBounds(10, 128, 213, 23);
+		contentPane.add(btnNewButton);
 	}
 }
