@@ -7,11 +7,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -122,6 +124,7 @@ public class MainWindow {
 	@SuppressWarnings({ "serial", "deprecation", "rawtypes", "unchecked" })
 	private void initialize() throws IOException {
 		
+		
 		try {
 			listCtrl = new ListenController();
 		} catch (IOException e) {
@@ -135,6 +138,12 @@ public class MainWindow {
 		frmCsgoBettingCalculator.setTitle("CSGO Betting Calculator V0.1");
 		frmCsgoBettingCalculator.setBounds(100, 100, 1280, 720);
 		frmCsgoBettingCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		/**
+		 * Icon oben links setzen
+		 */
+		ImageIcon img = new ImageIcon("src/res/money.png");
+		frmCsgoBettingCalculator.setIconImage(img.getImage());
 		
 		/**
 		 * Scrollpane fuer unsere Tabelle
