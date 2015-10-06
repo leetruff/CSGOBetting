@@ -44,6 +44,12 @@ public class DevFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public DevFrame() {
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        timer.cancel();
+		    }
+		});
 		setTitle("Tobis Developer Playground");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -104,6 +110,7 @@ public class DevFrame extends JFrame {
 					lblDebugstring.setText("Auto-update started");
 					btnNewButton.setText("Stop auto-update");
 					isAutoUpdateActive = true;
+					timer = new Timer();
 					timer.scheduleAtFixedRate(new TimerTask() {
 						  @Override
 						  public void run() {
@@ -126,4 +133,5 @@ public class DevFrame extends JFrame {
 		btnNewButton.setBounds(10, 128, 213, 23);
 		contentPane.add(btnNewButton);
 	}
+	
 }
