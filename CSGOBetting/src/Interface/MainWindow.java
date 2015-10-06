@@ -525,8 +525,6 @@ public class MainWindow {
 		lblEgb_1 = new JLabel("EGB:");
 		panel.add(lblEgb_1, "cell 2 5,growx,aligny top");
 		
-		lblTimeLeftTill = new JLabel("Time left till match start:\r\n");
-		panel.add(lblTimeLeftTill, "cell 0 7,growx,aligny top");
 		
 		JButton btnOpenInBrowser = new JButton("Open CSGL\r\n");
 		btnOpenInBrowser.addActionListener(new ActionListener() {
