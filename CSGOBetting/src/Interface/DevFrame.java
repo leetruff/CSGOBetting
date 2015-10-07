@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import MatchInformation.MatchInformation;
 
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class DevFrame extends JFrame {
@@ -23,6 +24,8 @@ public class DevFrame extends JFrame {
 	boolean isAutoUpdateActive = false;
 	boolean isUpdateProcessRunning = false;
 	MatchInformation Info = new MatchInformation();
+	private JTextField txtBet;
+	private JTextField txtInventory;
 
 	/**
 	 * Launch the application.
@@ -132,6 +135,28 @@ public class DevFrame extends JFrame {
 		});
 		btnNewButton.setBounds(10, 128, 213, 23);
 		contentPane.add(btnNewButton);
+		
+		txtBet = new JTextField();
+		txtBet.setText("bet %");
+		txtBet.setBounds(338, 27, 86, 20);
+		contentPane.add(txtBet);
+		txtBet.setColumns(10);
+		
+		txtInventory = new JTextField();
+		txtInventory.setText("inventory");
+		txtInventory.setBounds(338, 61, 86, 20);
+		contentPane.add(txtInventory);
+		txtInventory.setColumns(10);
+		
+		JButton btnBet = new JButton("$ bet");
+		btnBet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				double percent = 0.01*Double.parseDouble(txtBet.getText());
+				double inventory = Double.parseDouble(txtInventory.getText());
+				btnBet.setText(""+(percent*inventory));
+			}
+		});
+		btnBet.setBounds(338, 94, 89, 23);
+		contentPane.add(btnBet);
 	}
-	
 }
