@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
+import javax.sound.midi.MidiDevice.Info;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,6 +33,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import net.miginfocom.swing.MigLayout;
+import ActionListener.DevFrameActionListener;
 import Comparators.DateComparator;
 import Comparators.DoubleComparator;
 import Controller.ListenController;
@@ -76,13 +79,19 @@ public class MainWindow {
 
 	private JButton btnNewButton;
 	private JButton btnDevtools;
+	public JButton btnUpdateAll;
 	private JComboBox comboBox;
 	private JButton btnOpenEgb;
 	private JLabel lblNewLabel;
-	boolean suchliste;
+	private boolean suchliste;
 	private JLabel lblTimeLeft;
 
 	private Timer timer;
+	private JButton btnStartAutoupdate;
+	
+	boolean isAutoUpdateActive = false;
+	java.util.Timer autoUpdateTimer;
+	MatchInformation Info = new MatchInformation();
 
 
 	/**
@@ -151,12 +160,7 @@ public class MainWindow {
 		frmCsgoBettingCalculator.getContentPane().setLayout(new MigLayout("", "[83.00px][88.00][-18.00][318.00px][151px][61.00px][127.00px][468.00px]", "[63px][824.00px]"));
 		
 		btnDevtools = new JButton("DevTools");
-		btnDevtools.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				DevFrame devFrame = new DevFrame();
-				devFrame.setVisible(true);
-			}
-		});
+		btnDevtools.addActionListener(new DevFrameActionListener(this));
 		frmCsgoBettingCalculator.getContentPane().add(btnDevtools, "cell 1 0");
 		
 		
@@ -203,6 +207,28 @@ public class MainWindow {
 
 		});
 		frmCsgoBettingCalculator.getContentPane().add(btnNewButton, "cell 5 0,alignx center,aligny bottom");
+		
+		btnStartAutoupdate = new JButton("Start auto-update");
+		btnStartAutoupdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!isAutoUpdateActive){
+					btnStartAutoupdate.setText("Stop auto-update");
+					isAutoUpdateActive = true;
+					autoUpdateTimer = new java.util.Timer();
+					autoUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+						  @Override
+						  public void run() {
+							  btnUpdateAll.doClick();
+						  }
+						}, 10, 10*1000);
+				}else{
+					btnStartAutoupdate.setText("Start auto-update");
+					isAutoUpdateActive = false;
+					autoUpdateTimer.cancel();
+				}
+			}
+		});
+		frmCsgoBettingCalculator.getContentPane().add(btnStartAutoupdate, "cell 6 0");
 		JScrollPane scrollPane = new JScrollPane();
 		frmCsgoBettingCalculator.getContentPane().add(scrollPane, "cell 0 1 7 1,grow");
 		
@@ -303,13 +329,13 @@ public class MainWindow {
 				String currentItem = (String) comboBox.getSelectedItem();
 				switch (currentItem) {
 				case "CSGL + EGB":
-					try {
+					/*try {
 						aktuelleList = listCtrl.getBothMatches();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					listCtrl.setAktuelleList(aktuelleList);
+					listCtrl.setAktuelleList(aktuelleList);*/
 					try {
 						updateTable();
 					} catch (IOException e2) {
@@ -319,13 +345,13 @@ public class MainWindow {
 					break;
 					
 				case "CSGL + EGB Archive":
-					try {
+					/*try {
 						aktuelleList = listCtrl.getBothMatchesArchive();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					listCtrl.setAktuelleList(aktuelleList);
+					listCtrl.setAktuelleList(aktuelleList);*/
 					try {
 						updateTable();
 					} catch (IOException e1) {
@@ -335,8 +361,8 @@ public class MainWindow {
 					break;
 					
 				case "CSGL":
-					aktuelleList = listCtrl.getLoungeMatches();
-					listCtrl.setAktuelleList(aktuelleList);
+					/*aktuelleList = listCtrl.getLoungeMatches();
+					listCtrl.setAktuelleList(aktuelleList);*/
 					try {
 						updateTable();
 					} catch (IOException e) {
@@ -347,8 +373,8 @@ public class MainWindow {
 					
 					
 				case "EGB":
-					aktuelleList = listCtrl.getEGBMatches();
-					listCtrl.setAktuelleList(aktuelleList);
+					/*aktuelleList = listCtrl.getEGBMatches();
+					listCtrl.setAktuelleList(aktuelleList);*/
 					try {
 						updateTable();
 					} catch (IOException e) {
@@ -470,16 +496,19 @@ public class MainWindow {
 		/**
 		 * Knopf, welcher alle aktuellen Matches updated
 		 */
-		JButton btnUpdateAll = new JButton("Update All");
+		btnUpdateAll = new JButton("Update All");
 		btnUpdateAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(isAutoUpdateActive){
+					btnUpdateAll.setEnabled(false);
+				}
 				MatchInformation Info = new MatchInformation();
 				Info.createLoungeFile();
 				Info.createEGBFile();
 				Info.createClosedBetLinkList();
 				Info.createOpenBetLinkList();
 				Info = null;
-				
+				suchliste = false;
 				try {
 					listCtrl = new ListenController();
 				} catch (IOException e1) {
@@ -493,7 +522,7 @@ public class MainWindow {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+				btnUpdateAll.setEnabled(true);
 				
 			}
 		});
@@ -717,7 +746,7 @@ public class MainWindow {
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("serial")
-	private void updateTable() throws IOException {
+	public void updateTable() throws IOException {
 		table.setModel(new DefaultTableModel(
 				new Object[][] {},
 				new String[] {
@@ -807,7 +836,7 @@ public class MainWindow {
         	DefaultTableModel model = (DefaultTableModel) table.getModel();
         	
         	
-        	if(suchliste = false){
+        	if(suchliste == false){
 	        	/**
 	    		 * Auslesen, was in der Combobox ausgewaehlt ist und entsprechend die aktuelleListe setzen
 	    		 */
@@ -1043,4 +1072,43 @@ public class MainWindow {
 		       System.out.println(e.getMessage());
 		   }
 		}
+	
+	public void updateTableNumbers(){
+		suchliste = false;
+		try {
+			listCtrl = new ListenController();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			updateTable();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	public ListenController getListCtrl() {
+		return listCtrl;
+	}
+
+	public void setNewListCtrl() {
+		try {
+			this.listCtrl = new ListenController();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isSuchliste() {
+		return suchliste;
+	}
+
+	public void setSuchliste(boolean suchliste) {
+		this.suchliste = suchliste;
+	}
+	
+	
 }

@@ -3,6 +3,7 @@ package Interface;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Controller.ListenController;
 import MatchInformation.MatchInformation;
 
 import javax.swing.JLabel;
@@ -26,6 +28,7 @@ public class DevFrame extends JFrame {
 	MatchInformation Info = new MatchInformation();
 	private JTextField txtBet;
 	private JTextField txtInventory;
+	MainWindow mainWindow;
 
 	/**
 	 * Launch the application.
@@ -34,7 +37,7 @@ public class DevFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DevFrame frame = new DevFrame();
+					DevFrame frame = new DevFrame(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +49,8 @@ public class DevFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DevFrame() {
+	public DevFrame(MainWindow window) {
+		mainWindow = window;
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -117,12 +121,13 @@ public class DevFrame extends JFrame {
 					timer.scheduleAtFixedRate(new TimerTask() {
 						  @Override
 						  public void run() {
-					    	isUpdateProcessRunning = true;
 							Info.createLoungeFile();
 							Info.createEGBFile();
 							Info.createClosedBetLinkList();
 							Info.createOpenBetLinkList();
-					    	isUpdateProcessRunning = false;
+							if(mainWindow != null){
+								mainWindow.updateTableNumbers();
+							}
 						  }
 						}, 10, 5*1000);
 				}else{
