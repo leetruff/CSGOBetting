@@ -92,6 +92,8 @@ public class MainWindow {
 	boolean isAutoUpdateActive = false;
 	java.util.Timer autoUpdateTimer;
 	MatchInformation Info = new MatchInformation();
+	private JButton btnUpdateTable;
+	private JLabel lblAutoupdateFilesNot;
 
 
 	/**
@@ -214,21 +216,37 @@ public class MainWindow {
 				if(!isAutoUpdateActive){
 					btnStartAutoupdate.setText("Stop auto-update");
 					isAutoUpdateActive = true;
+					btnUpdateAll.setEnabled(false);
 					autoUpdateTimer = new java.util.Timer();
 					autoUpdateTimer.scheduleAtFixedRate(new TimerTask() {
-						  @Override
-						  public void run() {
-							  btnUpdateAll.doClick();
-						  }
-						}, 10, 10*1000);
+						@Override
+						public void run() {
+							lblAutoupdateFilesNot.setText("Auto-update: Files used right now!");
+							btnUpdateTable.setEnabled(false);
+							lblAutoupdateFilesNot.setText("Auto-update: Files used right now! (Upd. L file)");
+							Info.createLoungeFile();
+							lblAutoupdateFilesNot.setText("Auto-update: Files used right now! (Upd. E file)");
+							Info.createEGBFile();
+							lblAutoupdateFilesNot.setText("Auto-update: Files used right now! (Closed Link)");
+							Info.createClosedBetLinkList();
+							lblAutoupdateFilesNot.setText("Auto-update: Files used right now! (Open links)");
+							Info.createOpenBetLinkList();
+							lblAutoupdateFilesNot.setText("Auto-update: Files not used");
+							btnUpdateTable.setEnabled(true);
+						}
+					}, 10, 60*1000);
 				}else{
 					btnStartAutoupdate.setText("Start auto-update");
 					isAutoUpdateActive = false;
+					btnUpdateAll.setEnabled(true);
 					autoUpdateTimer.cancel();
 				}
 			}
 		});
 		frmCsgoBettingCalculator.getContentPane().add(btnStartAutoupdate, "cell 6 0");
+		
+		lblAutoupdateFilesNot = new JLabel("Auto-update: Files not used");
+		frmCsgoBettingCalculator.getContentPane().add(lblAutoupdateFilesNot, "cell 7 0");
 		JScrollPane scrollPane = new JScrollPane();
 		frmCsgoBettingCalculator.getContentPane().add(scrollPane, "cell 0 1 7 1,grow");
 		
@@ -526,7 +544,7 @@ public class MainWindow {
 				
 			}
 		});
-		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll, "cell 0 0,growx,aligny center");
+		frmCsgoBettingCalculator.getContentPane().add(btnUpdateAll, "flowx,cell 0 0,growx,aligny center");
 		
 		/**
 		 * Panel am rechten Rand mit Matchinformationen
@@ -631,6 +649,14 @@ public class MainWindow {
 		
 		lblVs = new JLabel("vs.");
 		panel.add(lblVs, "cell 0 1,alignx center,aligny top");
+		
+		btnUpdateTable = new JButton("Update Table");
+		btnUpdateTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateTableNumbers();
+			}
+		});
+		frmCsgoBettingCalculator.getContentPane().add(btnUpdateTable, "cell 0 0");
 		
 		
 		/**
