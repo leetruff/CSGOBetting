@@ -114,7 +114,7 @@ public class Match {
 			
 			if(allOdds[0] > allOdds[2]){
 				//bet on lounge team2
-				if(allOdds[1] < 0.2){// || allOdds[1] > 0.7){
+				if(allOdds[1] < 0.09 || allOdds[1] > 0.7){
 					setBetString("Skip", 0);
 					return;
 				}
@@ -124,7 +124,7 @@ public class Match {
 				setBetString(""+ temp, 2);
 			}else{
 				//bet on lounge team1
-				if(allOdds[0] < 0.2){// || allOdds[0] > 0.7){
+				if(allOdds[0] < 0.09 || allOdds[0] > 0.7){
 					setBetString("Skip", 0);
 					return;
 				}
@@ -173,8 +173,8 @@ public class Match {
 		//EGB Odds einfuegen -> veraenderte Odds returnen
 		private double[] calculateNewOdds(double[] oldOdds){
 			double[] newOdds = new double[2];
-			newOdds[0] = oldOdds[2] + funktion1(oldOdds[2], -1.0, 0.12);
-			newOdds[1] = oldOdds[3] + funktion1(oldOdds[3], -1.0, 0.12);
+			newOdds[0] = oldOdds[2] + funktion1(oldOdds[2], 0.7, 0.16);
+			newOdds[1] = oldOdds[3] + funktion1(oldOdds[3], 0.7, 0.16);
 			return newOdds;
 		}
 
