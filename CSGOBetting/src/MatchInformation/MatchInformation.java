@@ -282,8 +282,15 @@ public class MatchInformation {
 			out.println(lastUnclosedMatch);
 	    	System.out.println("Lounge File erstellung+update fertig");
 			out.close();
-		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
+		}catch (IOException|StringIndexOutOfBoundsException e) {
+			try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("C:"+File.separator+"csgobetting"+File.separator+"CSGOLoungeData.txt", true)))) {
+				//Schreiben des aktuellsten Stands in die letzte Zeile der Datei um sp�ter von dort aus weiter machen zu k�nnen
+				out.println(lastUnclosedMatch);
+		    	System.out.println("Beim laden der CSGOLounge ist etwas schief gegangen. File überprüfen und gegebenenfalls löschen");
+				out.close();
+			}catch (IOException e2){
+				e2.printStackTrace();
+			}
 			System.out.println("Error");
 		}
 		
@@ -868,6 +875,18 @@ public class MatchInformation {
 	 */
 	public void createClosedBetLinkList(){
 		List<String[]> pseudonyme = new ArrayList<String[]>();
+		
+		File loungeFile = new File("C:"+File.separator+"csgobetting"+File.separator+"linklistclosed.txt");
+		if(loungeFile.exists()){
+			System.gc();
+			//System.out.println("LoungeData (alte datei) löschen erfolgreich: "+loungeFile.delete());
+			try {
+				Files.delete(FileSystems.getDefault().getPath("C:"+File.separator+"csgobetting"+File.separator+"linklistclosed.txt"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		//erstellen eines Files in C:\csgobetting\linklist.txt
 		String path = "C:"+File.separator+"csgobetting"+File.separator+"linklistclosed.txt";
